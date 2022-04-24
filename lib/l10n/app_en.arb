@@ -1,0 +1,23 @@
+{
+    "language": "English",
+    "app_title": "My Shop",
+    "login_title": "Login",
+    "signup_title": "Signup",
+    "login_via_google": "Login with Google",
+    "login_via_facebook": "Login with Facebook",
+    "login_via_email": "Login with Email",
+    "no_account": "Don't have an account yet?",
+    "signup": "Signup",
+    "enter_email": "ُEnter your email",
+    "enter_password": "ُEnter password",
+    "confirm_password": "Confirm password",
+    "forgot_password": "Forgot Password?",
+    "login_suc": "Login Successful",
+    "signup_via_google":"Signup with Google",
+    "signup_via_facebook":"Signup with Facebook",
+    "signup_via_email": "Signup with Email",
+    "have_account": "Already have an account?",
+    "enter_name":"Enter your name",
+    "enter_phone":"Enter your phone number",
+    "done":"Done"
+}

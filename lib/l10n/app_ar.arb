@@ -1,0 +1,22 @@
+{
+    "language": "العربية",
+    "app_title": "متجري",
+    "login_title": "دخول",
+    "signup_title": "تسجيل",
+    "login_via_google": "دخول باستخدام حساب جوجل",
+    "login_via_facebook": "دخول باستخدام حساب فيسبوك",
+    "login_via_email": "دخول باستخدام البريد الالكتروني",
+    "no_account": "ليس لديك حساب؟",
+    "signup": "تسجيل جديد",
+    "enter_email": "ادخل البريد الالكتروني",
+    "enter_password": "ادخل كلمة السر",
+    "confirm_password": "تأكيد كلمة السر",
+    "forgot_password": "نسيت كلمة السر",
+    "signup_via_google":"تسجيل باستخدام حساب جوجل",
+    "signup_via_facebook":"تسجيل باستخدام حساب فيسبوك",
+    "signup_via_email": "تسجيل باستخدام البريد الالكتروني",
+    "have_account": "لديك حساب بالفعل؟",
+    "enter_name":"ادخل الاسم",
+    "enter_phone":"ادخل رقم الهاتف",
+    "done":"تم"
+}
