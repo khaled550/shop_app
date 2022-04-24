@@ -18,18 +18,12 @@ PageViewModel introPages(String imgPath) => PageViewModel(
       ),
     );
 
-navigateTo(BuildContext context, Widget screen) {
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => screen),
-  );
+navigateTo(BuildContext context, String pagePath) {
+  Navigator.pushNamed(context, pagePath);
 }
 
-navigateAndReplace(BuildContext context, Widget screen) {
-  Navigator.pushReplacement(
-    context,
-    MaterialPageRoute(builder: (context) => screen),
-  );
+navigateAndReplace(BuildContext context, String pagePath) {
+  Navigator.pushReplacementNamed(context, pagePath);
 }
 
 getAppStrings(BuildContext context) {
@@ -130,7 +124,7 @@ Widget bigText({
 void showDoneModal(
     {required BuildContext context,
     required String text,
-    Widget? screen,
+    String? pagePath,
     required IconData iconData}) async {
   Navigator.pop(context);
   showModalBottomSheet(
@@ -139,8 +133,8 @@ void showDoneModal(
               topEnd: Radius.circular(20), topStart: Radius.circular(20))),
       context: context,
       builder: (context) => FractionallySizedBox(
-        heightFactor: .7,
-        child: Padding(
+            heightFactor: .7,
+            child: Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -156,7 +150,9 @@ void showDoneModal(
                   const SizedBox(
                     height: 20,
                   ),
-                  Expanded(child: bigText(context: context, color: AppColors.mainBlackColor, text: text, lines: 2)),
+                  Expanded(
+                      child: bigText(
+                          context: context, color: AppColors.mainBlackColor, text: text, lines: 2)),
                   const SizedBox(
                     height: 30,
                   ),
@@ -167,10 +163,10 @@ void showDoneModal(
                       textColor: Colors.white,
                       onPressed: () {
                         Navigator.pop(context);
-                        navigateAndReplace(context, screen!);
+                        navigateAndReplace(context, pagePath!);
                       })
                 ],
               ),
             ),
-      ));
+          ));
 }

@@ -1,13 +1,15 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shop_app/cubit/home_cubit/home_page_cubit.dart';
 import 'package:shop_app/data/network/repo.dart';
 import 'package:shop_app/ui/page/home_page.dart';
 import 'package:shop_app/ui/page/login_signup_page.dart';
-import 'package:shop_app/ui/page/register_page.dart';
+import 'package:shop_app/ui/page/on_boarding_page.dart';
 
 import '../cubit/login_cubit/login_cubit.dart';
+import '../data/network/endpoints.dart';
 import '../data/network/network_service.dart';
+import '../utils/shared_pref.dart';
 
 class AppRouter {
   late Repo repo;
@@ -17,17 +19,31 @@ class AppRouter {
   }
 
   Route? generateRoute(RouteSettings settings) {
-    switch (settings.name) {
-      case "/login":
-        return MaterialPageRoute(builder: (_) => const HomePage());
+    String pagePath = settings.name!;
+    bool isFirstTime = SharedPref.getData(key: ON_BOARDING_SHARED) ?? true;
+    bool isLogged = SharedPref.getData(key: LOGIN_SHARED) ?? false;
+    print('onboard?: $isFirstTime');
+    if (isFirstTime) {
+      pagePath = "/on_boarding";
+    } else if (isLogged) {
+      pagePath = "/home";
+    }
+
+    switch (pagePath) {
       case "/":
         return MaterialPageRoute(
             builder: (_) => BlocProvider(
                   create: (context) => LoginCubit(repo: repo),
-                  child: LoginSignupPage(),
+                  child: const LoginSignupPage(),
                 ));
-      case "/register":
-        return MaterialPageRoute(builder: (_) => LoginSignupPage());
+      case "/home":
+        return MaterialPageRoute(
+            builder: (_) => BlocProvider(
+                  create: (context) => HomePageCubit(),
+                  child: const HomePage(),
+                ));
+      case "/on_boarding":
+        return MaterialPageRoute(builder: (_) => const OnBoardingPage());
       default:
         return null;
     }

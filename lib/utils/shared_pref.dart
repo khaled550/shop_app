@@ -13,6 +13,12 @@ class SharedPref {
     return sharedPreferences!.getBool(key);
   }
 
+  static dynamic getData({
+    required String key,
+  }) {
+    return sharedPreferences!.get(key);
+  }
+
   static Future<bool> putData({
     required String key,
     required dynamic value,
@@ -22,5 +28,11 @@ class SharedPref {
     if (value is bool) return await sharedPreferences!.setBool(key, value);
 
     return await sharedPreferences!.setDouble(key, value);
+  }
+
+  static Future<bool> removeData({
+    required String key,
+  }) {
+    return sharedPreferences!.remove(key);
   }
 }

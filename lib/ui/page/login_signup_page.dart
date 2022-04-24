@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/cubit/login_cubit/login_signup_state.dart';
 import 'package:shop_app/data/model/user_model.dart';
+import 'package:shop_app/data/network/endpoints.dart';
 import 'package:shop_app/ui/page/home_page.dart';
 import 'package:shop_app/utils/colors.dart';
 import 'package:shop_app/utils/components.dart';
+import 'package:shop_app/utils/shared_pref.dart';
 
 import '../../cubit/login_cubit/login_cubit.dart';
 
@@ -23,11 +25,19 @@ class LoginSignupPage extends StatelessWidget {
           if (state is LoginSuccessState) {
             print(state.loginModel.message);
             if (state.loginModel.status!) {
-              showDoneModal(
-                context: context, text: state.loginModel.message!, iconData: Icons.done_outlined);
+              SharedPref.putData(key: 'token', value: state.loginModel.data!.token);
+              SharedPref.putData(key: 'login_done', value: true).then((value) {
+                if (value) {
+                  showDoneModal(
+                      context: context,
+                      text: state.loginModel.message!,
+                      iconData: Icons.done_outlined,
+                      pagePath: HOME_PAGE_PATH);
+                }
+              });
             } else {
               showDoneModal(
-                context: context, text: state.loginModel.message!, iconData: Icons.error_outline);
+                  context: context, text: state.loginModel.message!, iconData: Icons.error_outline);
             }
           } else {}
         },
@@ -146,9 +156,11 @@ class LoginSignupPage extends StatelessWidget {
                               text: cubit.isLogin
                                   ? getAppStrings(context).login_via_email
                                   : getAppStrings(context).signup_via_email),
-                          IconButton(onPressed: () {
-                            Navigator.pop(context);
-                          }, icon: const Icon(Icons.close)),
+                          IconButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              icon: const Icon(Icons.close)),
                         ],
                       ),
                       const SizedBox(
@@ -285,8 +297,7 @@ class LoginSignupPage extends StatelessWidget {
 
   void submitLogin(context, LoginCubit cubit) {
     //cubit.loginWithEmail('khaled.mohamed@gmail.com', '123456');
-    cubit
-        .loginWithEmail(cubit.emailController.text, cubit.passwordController.text);
+    cubit.loginWithEmail(cubit.emailController.text, cubit.passwordController.text);
   }
 
   void submitSignup(LoginCubit cubit) {
