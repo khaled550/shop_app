@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-import 'package:shop_app/ui/page/home_page.dart';
+import 'package:shop_app/ui/page/login_signup_page.dart';
 import 'package:shop_app/utils/components.dart';
+import 'package:shop_app/utils/shared_pref.dart';
 
 class OnBoardingPage extends StatelessWidget {
   const OnBoardingPage({Key? key}) : super(key: key);
@@ -24,11 +25,7 @@ class OnBoardingPage extends StatelessWidget {
               introPages('assets/images/intro_3.png'),
             ],
             onDone: () {
-              //navigateTo(context, const HomePage());
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => HomePage()),
-              );
+              submitOnBoarding(context);
             },
             showBackButton: false,
             showSkipButton: true,
@@ -38,4 +35,12 @@ class OnBoardingPage extends StatelessWidget {
           ),
         ),
       );
+
+  void submitOnBoarding(BuildContext context) {
+    SharedPref.putData(key: 'on_boarding_done', value: true).then((value) {
+      if (value) {
+        navigateAndReplace(context, const LoginSignupPage());
+      }
+    });
+  }
 }

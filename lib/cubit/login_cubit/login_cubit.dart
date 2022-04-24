@@ -19,7 +19,7 @@ class LoginCubit extends Cubit<LoginSignupState> {
   TextEditingController nameController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
 
-  bool isLogin = false;
+  bool isLogin = true;
 
   LoginCubit({this.repo}) : super(const LoginInitial());
 
