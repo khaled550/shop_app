@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/cubit/login_cubit/login_signup_state.dart';
 import 'package:shop_app/data/model/user_model.dart';
 import 'package:shop_app/data/network/endpoints.dart';
-import 'package:shop_app/ui/page/home_page.dart';
+import 'package:shop_app/ui/page/home_layout.dart';
 import 'package:shop_app/utils/colors.dart';
 import 'package:shop_app/utils/components.dart';
 import 'package:shop_app/utils/shared_pref.dart';
@@ -26,7 +26,7 @@ class LoginSignupPage extends StatelessWidget {
             print(state.loginModel.message);
             if (state.loginModel.status!) {
               SharedPref.putData(key: 'token', value: state.loginModel.data!.token);
-              SharedPref.putData(key: 'login_done', value: true).then((value) {
+              SharedPref.putData(key: LOGIN_SHARED, value: true).then((value) {
                 if (value) {
                   showDoneModal(
                       context: context,

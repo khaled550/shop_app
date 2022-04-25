@@ -14,7 +14,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'data/network/network_service.dart';
-import 'ui/page/home_page.dart';
+import 'ui/page/home_layout.dart';
 import 'utils/shared_pref.dart';
 
 void initialization() async {

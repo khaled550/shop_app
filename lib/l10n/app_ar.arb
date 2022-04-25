@@ -18,5 +18,13 @@
     "have_account": "لديك حساب بالفعل؟",
     "enter_name":"ادخل الاسم",
     "enter_phone":"ادخل رقم الهاتف",
-    "done":"تم"
+    "done":"تم",
+    "gn_home":"الرئيسية",
+    "gn_cat":"الاقسام",
+    "gn_orders":"الطلبيات",
+    "gn_profile":"الملف الشخصي",
+    "search_text_field":"البحث",
+    "view_all":"اظهار الكل",
+    "hot_deals":"عرض اليوم",
+    "best_selling":"الافضل مبيعا"
 }

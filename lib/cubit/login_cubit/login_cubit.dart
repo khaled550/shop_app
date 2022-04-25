@@ -10,8 +10,6 @@ import 'login_signup_state.dart';
 class LoginCubit extends Cubit<LoginSignupState> {
   static LoginCubit get(context) => BlocProvider.of(context);
 
-  final Repo? repo;
-
   var scaffoldKey = GlobalKey<ScaffoldState>();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -21,6 +19,7 @@ class LoginCubit extends Cubit<LoginSignupState> {
 
   bool isLogin = true;
 
+  final Repo? repo;
   LoginCubit({this.repo}) : super(const LoginInitial());
 
   loginWithEmail(String email, String password) {

@@ -19,7 +19,7 @@ ThemeData appTheme({
       scaffoldBackgroundColor: mainColor,
       appBarTheme: AppBarTheme(
         actionsIconTheme: IconThemeData(color: secMainColor, size: 30),
-        //iconTheme: IconThemeData(color: Colors.black),
+        iconTheme: const IconThemeData(color: AppColors.mainColor),
         systemOverlayStyle: SystemUiOverlayStyle(
             statusBarColor: mainColor, statusBarIconBrightness: Brightness.dark),
         elevation: 0,

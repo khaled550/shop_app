@@ -1,3 +1,5 @@
+import 'package:shop_app/data/model/category_model.dart';
+import 'package:shop_app/data/model/home_model.dart';
 import 'package:shop_app/data/model/login_model.dart';
 import 'package:shop_app/data/model/signup_model.dart';
 import 'package:shop_app/data/model/user_model.dart';
@@ -16,5 +18,13 @@ class Repo {
   Future<SignupModel> signupWithEmail(
       {required UserModel userModel, required String password}) async {
     return await networkService.signupWithEmail(user: userModel, password: password);
+  }
+
+  Future<HomeModel> getHomeData() async {
+    return await networkService.getHomeData();
+  }
+
+  Future<CategoryModel> getCatsData() async {
+    return await networkService.getCatsData();
   }
 }

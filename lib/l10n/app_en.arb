@@ -12,12 +12,19 @@
     "enter_password": "ُEnter password",
     "confirm_password": "Confirm password",
     "forgot_password": "Forgot Password?",
-    "login_suc": "Login Successful",
     "signup_via_google":"Signup with Google",
     "signup_via_facebook":"Signup with Facebook",
     "signup_via_email": "Signup with Email",
     "have_account": "Already have an account?",
     "enter_name":"Enter your name",
     "enter_phone":"Enter your phone number",
-    "done":"Done"
+    "done":"Done",
+    "gn_home":"Home",
+    "gn_cat":"Categories",
+    "gn_orders":"Orders",
+    "gn_profile":"Profile",
+    "search_text_field":"Search Anything...",
+    "view_all":"view all",
+    "hot_deals":"Deal of the day",
+    "best_selling":"Best Selling"
 }

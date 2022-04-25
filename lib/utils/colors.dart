@@ -5,7 +5,7 @@ class AppColors {
   static const Color mainColor = Color(0xFF384EC7);
   static const Color signColor = Color(0xFF75E2FF);
   static const Color mainBlackColor = Color(0xFF111827);
-
+  static const Color mainGreyColor = Color(0xFFccc7c5);
   static MaterialColor convertColor() {
     Map<int, Color> colorCodes = {
       50: const Color.fromRGBO(255, 182, 71, 0.1),

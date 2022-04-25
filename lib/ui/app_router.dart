@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/cubit/home_cubit/home_page_cubit.dart';
 import 'package:shop_app/data/network/repo.dart';
-import 'package:shop_app/ui/page/home_page.dart';
+import 'package:shop_app/ui/page/home_layout.dart';
 import 'package:shop_app/ui/page/login_signup_page.dart';
 import 'package:shop_app/ui/page/on_boarding_page.dart';
 
@@ -39,8 +39,8 @@ class AppRouter {
       case "/home":
         return MaterialPageRoute(
             builder: (_) => BlocProvider(
-                  create: (context) => HomePageCubit(),
-                  child: const HomePage(),
+                  create: (context) => HomePageCubit(repo: repo)..loadHomePageData(),
+                  child: const HomeLayout(),
                 ));
       case "/on_boarding":
         return MaterialPageRoute(builder: (_) => const OnBoardingPage());
