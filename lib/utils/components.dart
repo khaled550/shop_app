@@ -3,7 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-import 'package:shop_app/ui/page/home_page.dart';
+import 'package:line_icons/line_icons.dart';
+import 'package:shop_app/data/model/category_model.dart';
+import 'package:shop_app/data/model/product_model.dart';
+import 'package:shop_app/ui/page/home_layout.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'colors.dart';
@@ -18,6 +21,7 @@ PageViewModel introPages(String imgPath) => PageViewModel(
       ),
     );
 
+// App utills
 navigateTo(BuildContext context, String pagePath) {
   Navigator.pushNamed(context, pagePath);
 }
@@ -30,6 +34,7 @@ getAppStrings(BuildContext context) {
   return AppLocalizations.of(context);
 }
 
+// App shared components
 Widget defaultBtn({
   required BuildContext context,
   hieght = 50.0,
@@ -109,7 +114,7 @@ Widget bigText({
   required BuildContext context,
   color = AppColors.mainColor,
   required text,
-  double size = 20,
+  double size = 24,
   overflow = TextOverflow.ellipsis,
   lines = 1,
 }) =>
@@ -120,6 +125,24 @@ Widget bigText({
         //style: Theme.of(context).textTheme.bodyText1,
         style: TextStyle(
             fontFamily: 'Robot', fontSize: size, color: color, fontWeight: FontWeight.bold));
+
+Widget smallText(
+        {color = AppColors.mainGreyColor,
+        required text,
+        double size = 16,
+        double height = 1.2,
+        textOverflow = TextOverflow.visible,
+        int lines = 1}) =>
+    Text(text,
+        overflow: textOverflow,
+        maxLines: 2,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+            fontFamily: 'Robot',
+            fontSize: size,
+            color: color,
+            fontWeight: FontWeight.w400,
+            height: height));
 
 void showDoneModal(
     {required BuildContext context,
@@ -170,3 +193,96 @@ void showDoneModal(
             ),
           ));
 }
+
+SliverAppBar mySliverAppBar(String tite) => SliverAppBar(
+      floating: true,
+      pinned: true,
+      snap: false,
+      centerTitle: false,
+      leading: IconButton(onPressed: (() {}), icon: const Icon(Icons.menu)),
+      title: Text(tite),
+      actions: [
+        IconButton(
+            onPressed: (() {}),
+            icon: const Icon(
+              LineIcons.bell,
+              color: AppColors.mainColor,
+            )),
+        IconButton(
+            onPressed: (() {}),
+            icon: const Icon(LineIcons.shoppingBag, color: AppColors.mainColor)),
+      ],
+    );
+
+//Home page components
+
+Widget buildCatsItem(Category category) => Column(
+      children: [
+        Container(
+          margin: const EdgeInsets.only(top: 5),
+          height: 80,
+          width: 80,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: Colors.white24,
+              image: DecorationImage(fit: BoxFit.cover, image: NetworkImage(category.image!))),
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        smallText(text: category.name!, color: AppColors.mainBlackColor)
+      ],
+    );
+Widget viewAllWidget(BuildContext context, String title) => Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        bigText(context: context, text: title, color: AppColors.mainBlackColor),
+        Row(
+          children: [
+            smallText(text: getAppStrings(context).view_all),
+            const Icon(
+              LineIcons.arrowLeft,
+              size: 16,
+              color: AppColors.mainGreyColor,
+            )
+          ],
+        )
+      ],
+    );
+
+Widget buildBestSellingContent(Product product) => Column(
+      children: [
+        Stack(
+          alignment: AlignmentDirectional.topEnd,
+          children: [
+            Container(
+              margin: const EdgeInsets.only(top: 5),
+              height: 120,
+              width: 140,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Colors.white24,
+                  image: DecorationImage(fit: BoxFit.cover, image: NetworkImage(product.image!))),
+            ),
+            CircleAvatar(
+              radius: 30,
+              backgroundColor: Colors.white.withOpacity(.4),
+              child: IconButton(
+                icon: const Icon(
+                  LineIcons.heart,
+                  color: Colors.black,
+                ),
+                onPressed: () {},
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        SizedBox(
+            width: 140,
+            height: 10,
+            child: smallText(text: product.name!, color: AppColors.mainBlackColor, lines: 1)),
+      ],
+    );
