@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/data/model/category_model.dart';
 import 'package:shop_app/data/model/home_model.dart';
+import 'package:shop_app/data/model/product_model.dart';
 import 'package:shop_app/ui/page/categories_page.dart';
 import 'package:shop_app/ui/page/home_page.dart';
 import 'package:shop_app/ui/page/orders_page.dart';
@@ -12,7 +13,8 @@ import 'home_page_state.dart';
 
 class HomePageCubit extends Cubit<HomeLayoutState> {
   final Repo repo;
-  HomePageCubit({required this.repo}) : super(HomeLayoutInitial());
+  final BuildContext? context;
+  HomePageCubit({required this.context, required this.repo}) : super(HomeLayoutInitial());
 
   static HomePageCubit get(context) => BlocProvider.of(context);
 
@@ -50,10 +52,22 @@ class HomePageCubit extends Cubit<HomeLayoutState> {
 
   CategoryModel? categoryModel;
   loadHomePageCatsData() {
-    repo.getCatsData().then((value) {
-      isLoaded = true;
+    repo.getCatsData(context: context!).then((value) {
       categoryModel = value;
-      emit(HomeCatsSucState());
+      loadProductsData();
+    }).onError((error, stackTrace) {
+      print(error);
+      emit(HomeCatsFailedState(error.toString()));
+    });
+  }
+
+  //load products
+  ProductModel? productModel;
+  loadProductsData() {
+    repo.getProductsData(context: context!).then((value) {
+      isLoaded = true;
+      productModel = value;
+      emit(HomePageSucState());
     }).onError((error, stackTrace) {
       print(error);
       emit(HomeCatsFailedState(error.toString()));

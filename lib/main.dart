@@ -1,14 +1,15 @@
-import 'dart:math';
-
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 import 'package:shop_app/cubit/home_cubit/home_page_cubit.dart';
 import 'package:shop_app/data/network/endpoints.dart';
 import 'package:shop_app/ui/app_router.dart';
 import 'package:shop_app/ui/page/login_signup_page.dart';
 import 'package:shop_app/l10n/l10n.dart';
 import 'package:shop_app/utils/MyBlocObserver.dart';
+import 'package:shop_app/utils/dimentions.dart';
 import 'package:shop_app/utils/styles.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -31,6 +32,7 @@ void initialization() async {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   NetworkService.init();
+
   await SharedPref.init();
   BlocOverrides.runZoned(
     () {
@@ -39,10 +41,11 @@ void main() async {
       //initialization();
 
       bool isDark = SharedPref.getData(key: APP_THEME) ?? false;
-      runApp(MyApp(
-        isDark: isDark,
-        appRouter: AppRouter(),
-      ));
+      runApp(DevicePreview(
+          builder: (context) => MyApp(
+                isDark: isDark,
+                appRouter: AppRouter(),
+              )));
     },
     blocObserver: MyBlocObserver(),
   );
@@ -56,7 +59,18 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    Dimentions.initDimentions(context);
     return MaterialApp(
+      /* builder: (context, widget) => ResponsiveWrapper.builder(
+        ClampingScrollWrapper.builder(context, widget!),
+        breakpoints: const [
+          ResponsiveBreakpoint.resize(350, name: MOBILE),
+          ResponsiveBreakpoint.autoScale(600, name: TABLET),
+          ResponsiveBreakpoint.resize(800, name: DESKTOP),
+          ResponsiveBreakpoint.autoScale(1700, name: 'XL'),
+        ],
+      ), */
+      builder: DevicePreview.appBuilder,
       onGenerateRoute: appRouter.generateRoute,
       supportedLocales: L10n.all,
       localizationsDelegates: AppLocalizations.localizationsDelegates,

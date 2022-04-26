@@ -11,9 +11,7 @@ class BannerChangeState extends HomeLayoutState {}
 class HomePageLoadingState extends HomeLayoutState {}
 
 class HomePageSucState extends HomeLayoutState {
-  final HomeModel homeModel;
-
-  HomePageSucState(this.homeModel);
+  HomePageSucState();
 }
 
 class HomePageFailedState extends HomeLayoutState {

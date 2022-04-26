@@ -33,13 +33,14 @@ class AppRouter {
       case "/":
         return MaterialPageRoute(
             builder: (_) => BlocProvider(
-                  create: (context) => LoginCubit(repo: repo),
+                  create: (context) => LoginCubit(context: context, repo: repo),
                   child: const LoginSignupPage(),
                 ));
       case "/home":
         return MaterialPageRoute(
             builder: (_) => BlocProvider(
-                  create: (context) => HomePageCubit(repo: repo)..loadHomePageData(),
+                  create: (context) =>
+                      HomePageCubit(context: context, repo: repo)..loadHomePageData(),
                   child: const HomeLayout(),
                 ));
       case "/on_boarding":

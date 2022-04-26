@@ -1,5 +1,5 @@
 {
-    "language": "English",
+    "language": "en",
     "app_title": "My Shop",
     "login_title": "Login",
     "signup_title": "Signup",
@@ -26,5 +26,6 @@
     "search_text_field":"Search Anything...",
     "view_all":"view all",
     "hot_deals":"Deal of the day",
-    "best_selling":"Best Selling"
+    "best_selling":"Best Selling",
+    "price_cur":"EGP"
 }

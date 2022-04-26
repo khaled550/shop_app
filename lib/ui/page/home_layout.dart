@@ -17,12 +17,7 @@ class HomeLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     HomePageCubit cubit = HomePageCubit.get(context);
-    return BlocConsumer<HomePageCubit, HomeLayoutState>(
-      listener: (context, state) {
-        print(state);
-        if (state is HomeLayoutInitial) {}
-        if (state is NavBarChangeState) {}
-      },
+    return BlocBuilder<HomePageCubit, HomeLayoutState>(
       builder: (context, state) {
         return Scaffold(
           body: cubit.pages[cubit.currNavIndex],
@@ -35,6 +30,7 @@ class HomeLayout extends StatelessWidget {
   Widget buildNavBar(BuildContext context) {
     HomePageCubit cubit = HomePageCubit.get(context);
     return Container(
+      width: double.maxFinite,
       padding: const EdgeInsets.all(8.0),
       color: Colors.white,
       child: GNav(

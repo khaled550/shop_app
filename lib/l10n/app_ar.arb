@@ -1,5 +1,5 @@
 {
-    "language": "العربية",
+    "language": "ar",
     "app_title": "متجري",
     "login_title": "دخول",
     "signup_title": "تسجيل",
@@ -26,5 +26,6 @@
     "search_text_field":"البحث",
     "view_all":"اظهار الكل",
     "hot_deals":"عرض اليوم",
-    "best_selling":"الافضل مبيعا"
+    "best_selling":"الافضل مبيعا",
+    "price_cur":"ج.م"
 }

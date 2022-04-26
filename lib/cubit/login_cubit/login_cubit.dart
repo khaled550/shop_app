@@ -8,6 +8,7 @@ import 'package:shop_app/data/network/repo.dart';
 import 'login_signup_state.dart';
 
 class LoginCubit extends Cubit<LoginSignupState> {
+
   static LoginCubit get(context) => BlocProvider.of(context);
 
   var scaffoldKey = GlobalKey<ScaffoldState>();
@@ -20,11 +21,12 @@ class LoginCubit extends Cubit<LoginSignupState> {
   bool isLogin = true;
 
   final Repo? repo;
-  LoginCubit({this.repo}) : super(const LoginInitial());
+  final BuildContext? context;
+  LoginCubit({this.context, this.repo}) : super(const LoginInitial());
 
   loginWithEmail(String email, String password) {
     emit(const LoginLoadingState());
-    repo!.loginWithEmail(email: email, password: password).then((loginModel) {
+    repo!.loginWithEmail(context: context!, email: email, password: password).then((loginModel) {
       emit(LoginSuccessState(loginModel: loginModel));
     }).onError((error, stackTrace) {
       print(error.toString());
@@ -34,7 +36,7 @@ class LoginCubit extends Cubit<LoginSignupState> {
 
   signupWithEmail(UserModel user, String password) {
     emit(const SignupLoadingState());
-    repo!.signupWithEmail(userModel: user, password: password).then((value) {
+    repo!.signupWithEmail(context: context!, userModel: user, password: password).then((value) {
       emit(SignupSuccessState(signupModel: value));
     }).onError((error, stackTrace) {
       print(error.toString());

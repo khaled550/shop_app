@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:introduction_screen/introduction_screen.dart';
@@ -8,6 +10,9 @@ import 'package:shop_app/data/model/category_model.dart';
 import 'package:shop_app/data/model/product_model.dart';
 import 'package:shop_app/ui/page/home_layout.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:shop_app/utils/dimentions.dart';
+import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
+import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
 
 import 'colors.dart';
 
@@ -132,16 +137,18 @@ Widget smallText(
         double size = 16,
         double height = 1.2,
         textOverflow = TextOverflow.visible,
+        FontWeight fontWeight = FontWeight.normal,
+        TextAlign textAlign = TextAlign.start,
         int lines = 1}) =>
     Text(text,
         overflow: textOverflow,
         maxLines: 2,
-        textAlign: TextAlign.center,
+        textAlign: textAlign,
         style: TextStyle(
             fontFamily: 'Robot',
             fontSize: size,
             color: color,
-            fontWeight: FontWeight.w400,
+            fontWeight: fontWeight,
             height: height));
 
 void showDoneModal(
@@ -195,10 +202,10 @@ void showDoneModal(
 }
 
 SliverAppBar mySliverAppBar(String tite) => SliverAppBar(
-      floating: true,
+      floating: false,
       pinned: true,
       snap: false,
-      centerTitle: false,
+      centerTitle: true,
       leading: IconButton(onPressed: (() {}), icon: const Icon(Icons.menu)),
       title: Text(tite),
       actions: [
@@ -214,18 +221,37 @@ SliverAppBar mySliverAppBar(String tite) => SliverAppBar(
       ],
     );
 
+myGrid({required List<Product> products}) => StaggeredGridView.countBuilder(
+    crossAxisCount: 2,
+    itemCount: products.length,
+    crossAxisSpacing: 8,
+    mainAxisSpacing: 8,
+    itemBuilder: (context, index) => buildProductItem(context, products[index]),
+    staggeredTileBuilder: (index) => const StaggeredTile.fit(1));
+
 //Home page components
 
 Widget buildCatsItem(Category category) => Column(
       children: [
-        Container(
-          margin: const EdgeInsets.only(top: 5),
-          height: 80,
-          width: 80,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              color: Colors.white24,
-              image: DecorationImage(fit: BoxFit.cover, image: NetworkImage(category.image!))),
+        CachedNetworkImage(
+          imageUrl: category.image!,
+          imageBuilder: (context, imageProvider) => Container(
+            margin: const EdgeInsets.only(top: 5),
+            height: 80,
+            width: 80,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Colors.white24,
+                image: DecorationImage(fit: BoxFit.cover, image: imageProvider)),
+          ),
+          placeholder: (context, url) => Transform.scale(
+            scale: 0.2,
+            child: const CircularProgressIndicator(),
+          ),
+          errorWidget: (context, url, error) => Icon(
+            Icons.error,
+            color: Theme.of(context).textTheme.bodyText1!.color,
+          ),
         ),
         const SizedBox(
           height: 20,
@@ -250,39 +276,121 @@ Widget viewAllWidget(BuildContext context, String title) => Row(
       ],
     );
 
-Widget buildBestSellingContent(Product product) => Column(
-      children: [
-        Stack(
-          alignment: AlignmentDirectional.topEnd,
-          children: [
-            Container(
-              margin: const EdgeInsets.only(top: 5),
-              height: 120,
-              width: 140,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: Colors.white24,
-                  image: DecorationImage(fit: BoxFit.cover, image: NetworkImage(product.image!))),
-            ),
-            CircleAvatar(
-              radius: 30,
-              backgroundColor: Colors.white.withOpacity(.4),
-              child: IconButton(
-                icon: const Icon(
-                  LineIcons.heart,
-                  color: Colors.black,
+Widget buildProductItem(BuildContext context, Product product) => Container(
+      //height: 250,
+      margin: const EdgeInsets.all(3),
+      //padding: const EdgeInsets.all(5),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.grey[200],
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 1,
+            blurRadius: 2,
+            offset: const Offset(0, 1),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Stack(
+            alignment: AlignmentDirectional.topEnd,
+            children: [
+              CachedNetworkImage(
+                imageUrl: product.image!,
+                imageBuilder: (context, imageProvider) => Container(
+                  height: Dimentions.dp160,
+                  width: double.maxFinite,
+                  decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+                      color: Colors.white24,
+                      image: DecorationImage(fit: BoxFit.cover, image: imageProvider)),
                 ),
-                onPressed: () {},
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        SizedBox(
-            width: 140,
+                placeholder: (context, url) => const CircularProgressIndicator(),
+                errorWidget: (context, url, error) => Icon(
+                  Icons.error,
+                  color: Theme.of(context).textTheme.bodyText1!.color,
+                ),
+              )
+              /* CircleAvatar(
+                radius: 30,
+                backgroundColor: Colors.white.withOpacity(.4),
+                child: IconButton(
+                  icon: const Icon(
+                    LineIcons.heart,
+                    color: Colors.black,
+                  ),
+                  onPressed: () {},
+                ),
+              ), */
+            ],
+          ),
+          const SizedBox(
             height: 10,
-            child: smallText(text: product.name!, color: AppColors.mainBlackColor, lines: 1)),
-      ],
+          ),
+          Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: smallText(
+                text: product.name!,
+                color: AppColors.mainBlackColor,
+                lines: 1,
+                textOverflow: TextOverflow.clip),
+          ),
+          const SizedBox(
+            height: 5,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: smallText(
+                text: "${product.price!.toString()} ${getAppStrings(context).price_cur}",
+                color: AppColors.mainBlackColor,
+                lines: 1,
+                fontWeight: FontWeight.bold),
+          )
+        ],
+      ),
+    );
+
+buildOrderItem(BuildContext context) => Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        //crossAxisAlignment: CrossAxisAlignment.center,
+
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  const Icon(
+                    CupertinoIcons.bag,
+                    color: AppColors.mainColor,
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      bigText(context: context, text: 'Order', size: 16),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      smallText(text: '5 May 2022')
+                    ],
+                  ),
+                ],
+              ),
+              const Icon(
+                CupertinoIcons.arrow_right,
+                color: AppColors.mainColor,
+              ),
+            ],
+          )
+        ],
+      ),
     );

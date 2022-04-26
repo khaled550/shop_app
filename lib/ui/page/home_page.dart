@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:shop_app/cubit/home_cubit/home_page_cubit.dart';
 import 'package:shop_app/data/model/home_model.dart';
+import 'package:shop_app/utils/dimentions.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../cubit/home_cubit/home_page_state.dart';
@@ -59,13 +60,6 @@ class HomePage extends StatelessWidget {
                     height: 30,
                   ),
                   SizedBox(height: 210, child: buildBannerPageView(homeModel.data!.banners!)),
-                  /* DotsIndicator(
-                    dotsCount: homeModel.data!.banners!.length,
-                    position: cubit!.currBannerPage,
-                    decorator: const DotsDecorator(
-                      activeColor: AppColors.mainColor,
-                    ),
-                  ) */
                   SmoothPageIndicator(
                     controller: cubit!.pageController,
                     count: homeModel.data!.banners!.length,
@@ -135,14 +129,16 @@ class HomePage extends StatelessWidget {
       );
 
   Widget buildBestSelling(BuildContext context) => SizedBox(
-        height: 200,
+        height: 280,
         child: ListView.separated(
             scrollDirection: Axis.horizontal,
-            itemBuilder: ((context, index) =>
-                buildBestSellingContent(cubit!.homeModel!.data!.products![index])),
+            itemBuilder: ((context, index) => SizedBox(
+                height: 250,
+                width: 150,
+                child: buildProductItem(context, cubit!.productModel!.products![index]))),
             separatorBuilder: ((context, index) => const SizedBox(
-                  width: 30,
+                  width: 10,
                 )),
-            itemCount: cubit!.homeModel!.data!.products!.length),
+            itemCount: cubit!.productModel!.products!.length),
       );
 }

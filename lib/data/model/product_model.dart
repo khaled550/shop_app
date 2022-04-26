@@ -8,9 +8,9 @@ class ProductModel {
   ProductModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    if (json['products'] != null) {
+    if (json['data']['data'] != null) {
       products = <Product>[];
-      json['products'].forEach((v) {
+      json['data']['data'].forEach((v) {
         products!.add(Product.fromJson(v));
       });
     }
@@ -19,7 +19,7 @@ class ProductModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     if (products != null) {
-      data['products'] = products!.map((v) => v.toJson()).toList();
+      data['data']['data'] = products!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -27,8 +27,8 @@ class ProductModel {
 
 class Product {
   int? id;
-  int? price;
-  int? oldPrice;
+  dynamic price;
+  dynamic oldPrice;
   int? discount;
   String? image;
   String? name;

@@ -27,6 +27,9 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  cached_network_image: ^3.2.0
+  cupertino_icons: ^1.0.4
+  device_preview: ^1.0.0
   dio: ^4.0.6
   dots_indicator: ^2.1.0
   flutter:
@@ -39,8 +42,10 @@ dependencies:
   intl: ^0.17.0
   introduction_screen: ^3.0.2
   line_icons: ^2.0.1
+  responsive_framework: ^0.1.7
   shared_preferences: ^2.0.13
   smooth_page_indicator: ^1.0.0+2
+  staggered_grid_view_flutter: ^0.0.4
 
 dev_dependencies:
   flutter_lints: ^1.0.0

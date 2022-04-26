@@ -1,9 +1,12 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:shop_app/data/model/category_model.dart';
 import 'package:shop_app/data/model/home_model.dart';
 import 'package:shop_app/data/model/login_model.dart';
+import 'package:shop_app/data/model/product_model.dart';
 import 'package:shop_app/data/model/signup_model.dart';
 import 'package:shop_app/data/network/endpoints.dart';
+import 'package:shop_app/utils/components.dart';
 
 import '../model/user_model.dart';
 
@@ -16,12 +19,12 @@ class NetworkService {
 
   Future<Response> getData(
       {required String url,
+      required BuildContext context,
       Map<String, dynamic>? query,
-      String lang = 'ar',
       String token = ''}) async {
     dio.options.headers = {
       'Content-Type': 'application/json',
-      'lang': lang,
+      'lang': getAppStrings(context).language,
       'Authorization': token
     };
     return await dio.get(url, queryParameters: query);
@@ -29,21 +32,22 @@ class NetworkService {
 
   Future<Response> postData(
       {required String url,
+      required BuildContext context,
       Map<String, dynamic>? query,
       required Map<String, dynamic> data,
-      String lang = 'ar',
       String token = ''}) async {
     dio.options.headers = {
       'Content-Type': 'application/json',
-      'lang': lang,
+      'lang': getAppStrings(context).language,
       'Authorization': token
     };
     return await dio.post(url, queryParameters: query, data: data);
   }
 
-  Future<LoginModel> loginWithEmail({required String email, required String password}) async {
+  Future<LoginModel> loginWithEmail(
+      {required BuildContext context, required String email, required String password}) async {
     LoginModel loginModel = LoginModel();
-    await postData(url: LOGIN, data: {
+    await postData(context: context, url: LOGIN, data: {
       'email': email,
       'password': password,
     }).then((value) {
@@ -55,8 +59,9 @@ class NetworkService {
     return loginModel;
   }
 
-  Future<SignupModel> signupWithEmail({required UserModel user, required String password}) async {
-    await postData(url: SIGNUP, data: {
+  Future<SignupModel> signupWithEmail(
+      {required BuildContext context, required UserModel user, required String password}) async {
+    await postData(context: context, url: SIGNUP, data: {
       'name': user.name,
       'email': user.email,
       'password': password,
@@ -85,15 +90,30 @@ class NetworkService {
     return homeModel;
   }
 
-  Future<CategoryModel> getCatsData() async {
+  Future<CategoryModel> getCatsData({
+    required BuildContext context,
+  }) async {
     CategoryModel categoryModel = CategoryModel();
-    await getData(url: CATS_DATA).then((value) {
+    await getData(context: context, url: CATS_DATA).then((value) {
       categoryModel = CategoryModel.fromJson(value.data);
       print('User getCatsData: ${categoryModel.cats!.length}');
     }).onError((error, stackTrace) {
       print(error.toString());
     });
     return categoryModel;
+  }
+
+  Future<ProductModel> getProductsData({
+    required BuildContext context,
+  }) async {
+    ProductModel productModel = ProductModel();
+    await getData(context: context, url: PRODUCTS_DATA).then((value) {
+      productModel = ProductModel.fromJson(value.data);
+      print('User getProductsData: ${value.data}');
+    }).onError((error, stackTrace) {
+      print(error.toString());
+    });
+    return productModel;
   }
 
   Map<String, dynamic> myHomeData = {
@@ -165,7 +185,7 @@ class NetworkService {
           "product": null
         }
       ],
-      "products": [
+      "data": [
         {
           "id": 52,
           "price": 25000,

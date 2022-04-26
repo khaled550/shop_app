@@ -6,6 +6,7 @@ const String LOGIN = '/api/login';
 const String SIGNUP = '/api/register';
 const String HOME_DATA = '/api/home';
 const String CATS_DATA = '/api/categories';
+const String PRODUCTS_DATA = '/api/products';
 
 //CONSTANTS
 const String ON_BOARDING_SHARED = 'on_boarding_done';
