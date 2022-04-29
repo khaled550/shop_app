@@ -1,13 +1,11 @@
 class ProductModel {
   bool? status;
-  String? message;
   List<Product>? products;
 
   ProductModel({status, message, data});
 
   ProductModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
-    message = json['message'];
     if (json['data']['data'] != null) {
       products = <Product>[];
       json['data']['data'].forEach((v) {

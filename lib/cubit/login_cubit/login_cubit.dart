@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/data/model/user_model.dart';
@@ -8,7 +6,6 @@ import 'package:shop_app/data/network/repo.dart';
 import 'login_signup_state.dart';
 
 class LoginCubit extends Cubit<LoginSignupState> {
-
   static LoginCubit get(context) => BlocProvider.of(context);
 
   var scaffoldKey = GlobalKey<ScaffoldState>();
@@ -24,14 +21,17 @@ class LoginCubit extends Cubit<LoginSignupState> {
   final BuildContext? context;
   LoginCubit({this.context, this.repo}) : super(const LoginInitial());
 
-  loginWithEmail(String email, String password) {
+  Future<bool> loginWithEmail(String email, String password) async {
     emit(const LoginLoadingState());
     repo!.loginWithEmail(context: context!, email: email, password: password).then((loginModel) {
       emit(LoginSuccessState(loginModel: loginModel));
+      return true;
     }).onError((error, stackTrace) {
       print(error.toString());
       emit(LoginFailedState(error: error.toString()));
+      return false;
     });
+    return false;
   }
 
   signupWithEmail(UserModel user, String password) {

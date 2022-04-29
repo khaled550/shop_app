@@ -27,5 +27,14 @@
     "view_all":"اظهار الكل",
     "hot_deals":"عرض اليوم",
     "best_selling":"الافضل مبيعا",
-    "price_cur":"ج.م"
+    "price_cur":"ج.م",
+    "discount":"خصم",
+    "edit":"تعديل",
+    "settings":"الاعدادت",
+    "dark_mode":"الوضع الليلي",
+    "lang":"العربية",
+    "account_settings":"اعدادت الحساب",
+    "my_lang":"اللغة",
+    "logout":"تسجيل الخروج",
+    "updated":"تم التعديل بنجاح"
 }

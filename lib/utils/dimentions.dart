@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Dimentions {
-  static Size? size;
+  /* static Size? size;
   static double dp60 = 60;
   static double dp330 = 330;
   static double dp160 = 160;
@@ -18,5 +18,5 @@ class Dimentions {
     dp280 = size!.height / getSizeFactor(dp280);
   }
 
-  static double getSizeFactor(double dp) => 926 / dp;
+  static double getSizeFactor(double dp) => 926 / dp; */
 }

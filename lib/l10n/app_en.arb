@@ -27,5 +27,14 @@
     "view_all":"view all",
     "hot_deals":"Deal of the day",
     "best_selling":"Best Selling",
-    "price_cur":"EGP"
+    "price_cur":"EGP",
+    "discount":"DISCOUNT",
+    "edit":"Edit",
+    "settings":"Settings",
+    "dark_mode":"Dark Mode",
+    "my_lang":"Language",
+    "account_settings":"Account settings",
+    "lang":"English",
+    "logout":"Logout",
+    "updated":"Updated Successfully"
 }

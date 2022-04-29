@@ -26,8 +26,8 @@ class Repo {
         context: context, user: userModel, password: password);
   }
 
-  Future<HomeModel> getHomeData() async {
-    return await networkService.getHomeData();
+  Future<HomeModel> getHomeData(BuildContext context) async {
+    return await networkService.getHomeData(context: context);
   }
 
   Future<CategoryModel> getCatsData({required BuildContext context}) async {
@@ -36,5 +36,22 @@ class Repo {
 
   Future<ProductModel> getProductsData({required BuildContext context}) async {
     return await networkService.getProductsData(context: context);
+  }
+
+  Future<bool> updateFav({required BuildContext context, required int id}) async {
+    return await networkService.updateFav(context: context, id: id);
+  }
+
+  Future<UserModel> getProfileData({required BuildContext context}) async {
+    return await networkService.getProfileData(context: context);
+  }
+
+  Future<UserModel> updateProfileData(
+      {required BuildContext context,
+      required String name,
+      required String email,
+      required String phone}) async {
+    return await networkService.updateProfileData(
+        context: context, name: name, email: email, phone: phone);
   }
 }

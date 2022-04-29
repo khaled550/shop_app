@@ -3,8 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/cubit/login_cubit/login_signup_state.dart';
 import 'package:shop_app/data/model/user_model.dart';
 import 'package:shop_app/data/network/endpoints.dart';
-import 'package:shop_app/ui/page/home_layout.dart';
-import 'package:shop_app/utils/colors.dart';
 import 'package:shop_app/utils/components.dart';
 import 'package:shop_app/utils/shared_pref.dart';
 
@@ -22,8 +20,11 @@ class LoginSignupPage extends StatelessWidget {
       ),
       body: BlocConsumer<LoginCubit, LoginSignupState>(
         listener: (context, state) {
+          print(state);
+          if (state is LoginLoadingState) {
+            showLoadingModal(context);
+          }
           if (state is LoginSuccessState) {
-            print(state.loginModel.message);
             if (state.loginModel.status!) {
               SharedPref.putData(key: 'token', value: state.loginModel.data!.token);
               SharedPref.putData(key: LOGIN_SHARED, value: true).then((value) {
@@ -62,35 +63,68 @@ class LoginSignupPage extends StatelessWidget {
           Column(
             children: [
               defaultBtn(
-                  context: context,
-                  onPressed: () {},
-                  text: cubit.isLogin
-                      ? getAppStrings(context).login_via_google
-                      : getAppStrings(context).signup_via_google,
-                  backgroungColor: Colors.white),
+                context: context,
+                onPressed: () {},
+                text: cubit.isLogin
+                    ? getAppStrings(context).login_via_google
+                    : getAppStrings(context).signup_via_google,
+              ),
               const SizedBox(
                 height: 20,
               ),
               defaultBtn(
-                  context: context,
-                  onPressed: () {},
-                  text: cubit.isLogin
-                      ? getAppStrings(context).login_via_facebook
-                      : getAppStrings(context).signup_via_facebook,
-                  backgroungColor: Colors.white),
+                context: context,
+                onPressed: () {},
+                text: cubit.isLogin
+                    ? getAppStrings(context).login_via_facebook
+                    : getAppStrings(context).signup_via_facebook,
+              ),
               const SizedBox(
                 height: 100,
               ),
-              defaultBtn(
-                  context: context,
-                  onPressed: () {
-                    buildBottomSheet(context, cubit);
-                  },
-                  text: cubit.isLogin
-                      ? getAppStrings(context).login_via_email
-                      : getAppStrings(context).signup_via_email,
-                  textColor: Colors.white,
-                  backgroungColor: AppColors.mainColor)
+              cubit.isLogin
+                  ? defaultBtn(
+                      context: context,
+                      onPressed: () {
+                        buildBottomSheet(
+                            context: context,
+                            title: cubit.isLogin
+                                ? getAppStrings(context).login_via_email
+                                : getAppStrings(context).signup_via_email,
+                            emailController: cubit.emailController,
+                            passwordController: cubit.passwordController,
+                            isLogin: cubit.isLogin,
+                            btnText: cubit.isLogin
+                                ? getAppStrings(context).login_via_email
+                                : getAppStrings(context).signup_via_email,
+                            cubit: cubit,
+                            onPressedBtn: () {
+                              submitLogin(context, cubit);
+                            });
+                      },
+                      text: cubit.isLogin
+                          ? getAppStrings(context).login_via_email
+                          : getAppStrings(context).signup_via_email,
+                      //textColor: Colors.white,
+                      //backgroungColor: AppColors.mainColor
+                    )
+                  : defaultBtn(
+                      context: context,
+                      onPressed: () {
+                        buildBottomSheet(
+                            context: context,
+                            title: getAppStrings(context).signup_via_email,
+                            emailController: cubit.emailController,
+                            passwordController: cubit.passwordController,
+                            isLogin: cubit.isLogin,
+                            btnText: getAppStrings(context).signup_via_email,
+                            cubit: cubit,
+                            onPressedBtn: () {});
+                      },
+                      text: getAppStrings(context).signup_via_email,
+                      //textColor: Colors.white,
+                      //backgroungColor: AppColors.mainColor
+                    )
               /*BlocBuilder<LoginCubit, LoginSignupState>(
                 builder: (c, state) {
                   return defaultBtn(
@@ -128,185 +162,23 @@ class LoginSignupPage extends StatelessWidget {
     );
   }
 
-  buildBottomSheet(context, LoginCubit cubit) {
-    showModalBottomSheet(
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadiusDirectional.only(
-                topEnd: Radius.circular(20), topStart: Radius.circular(20))),
-        context: context,
-        isDismissible: false,
-        isScrollControlled: true,
-        builder: (context) => FractionallySizedBox(
-              heightFactor: 0.85,
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Form(
-                  //key: formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    // mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          bigText(
-                              context: context,
-                              color: AppColors.mainBlackColor,
-                              size: 16,
-                              text: cubit.isLogin
-                                  ? getAppStrings(context).login_via_email
-                                  : getAppStrings(context).signup_via_email),
-                          IconButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              icon: const Icon(Icons.close)),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        color: Colors.white70,
-                        child: defaultTextField(
-                            context: context,
-                            text: getAppStrings(context).enter_email,
-                            controller: cubit.emailController,
-                            validateText: 'Email must not be empty',
-                            onSubmitted: (value) {},
-                            prefixIcon: Icons.email_outlined),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        color: Colors.white70,
-                        child: defaultTextField(
-                            context: context,
-                            text: getAppStrings(context).enter_password,
-                            keyboardType: TextInputType.visiblePassword,
-                            controller: cubit.passwordController,
-                            onSubmitted: (value) {
-                              submitLogin(context, cubit);
-                            },
-                            validateText: 'Date must not be empty',
-                            onTap: () {},
-                            prefixIcon: Icons.lock_outline),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      cubit.isLogin
-                          ? clickableText(() {}, getAppStrings(context).forgot_password)
-                          : Column(
-                              children: [
-                                defaultTextField(
-                                    context: context,
-                                    text: getAppStrings(context).confirm_password,
-                                    keyboardType: TextInputType.visiblePassword,
-                                    controller: cubit.confirmPasswordController,
-                                    onSubmitted: (value) {
-                                      //submitLogin();
-                                    },
-                                    validateText: '',
-                                    onTap: () {},
-                                    prefixIcon: Icons.lock_outline),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                defaultTextField(
-                                    context: context,
-                                    text: getAppStrings(context).enter_name,
-                                    keyboardType: TextInputType.name,
-                                    controller: cubit.nameController,
-                                    onSubmitted: (value) {
-                                      //submitLogin();
-                                    },
-                                    validateText: '',
-                                    onTap: () {},
-                                    prefixIcon: Icons.person_outline),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                defaultTextField(
-                                    context: context,
-                                    text: getAppStrings(context).enter_phone,
-                                    keyboardType: TextInputType.phone,
-                                    controller: cubit.phoneController,
-                                    onSubmitted: (value) {
-                                      //submitLogin();
-                                    },
-                                    validateText: '',
-                                    onTap: () {},
-                                    prefixIcon: Icons.phone_android_outlined),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                              ],
-                            ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      BlocProvider.value(
-                        value: cubit,
-                        child: BlocBuilder<LoginCubit, LoginSignupState>(
-                          builder: (context, state) {
-                            //cubit = LoginCubit.get(c);
-                            if (cubit.isLogin) {
-                              if (state is LoginLoadingState) {
-                                return const Center(
-                                  child: CircularProgressIndicator(),
-                                );
-                              } else {
-                                return defaultBtn(
-                                    context: context,
-                                    text: getAppStrings(context).login_title,
-                                    backgroungColor: AppColors.mainColor,
-                                    textColor: Colors.white,
-                                    onPressed: () {
-                                      //showDoneModal(context, getAppStrings(context).login_suc);
-                                      submitLogin(context, cubit);
-                                    });
-                              }
-                            } else {
-                              if (state is SignupLoadingState) {
-                                return const Center(
-                                  child: CircularProgressIndicator(),
-                                );
-                              } else {
-                                return defaultBtn(
-                                    context: context,
-                                    text: getAppStrings(context).signup_title,
-                                    backgroungColor: AppColors.mainColor,
-                                    textColor: Colors.white,
-                                    onPressed: () {
-                                      //showDoneModal(context, getAppStrings(context).login_suc);
-                                      submitSignup(cubit);
-                                    });
-                              }
-                            }
-                          },
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ));
-  }
-
   void submitLogin(context, LoginCubit cubit) {
     //cubit.loginWithEmail('khaled.mohamed@gmail.com', '123456');
-    cubit.loginWithEmail(cubit.emailController.text, cubit.passwordController.text);
+    Navigator.pop(context);
+    cubit.loginWithEmail(cubit.emailController.text, cubit.passwordController.text).then((value) {
+      if (value) {}
+    });
   }
 
   void submitSignup(LoginCubit cubit) {
-    cubit.signupWithEmail(
-        UserModel(
-          name: cubit.nameController.text,
-          email: cubit.emailController.text,
-          phone: cubit.emailController.text,
-        ),
-        cubit.passwordController.text);
+    cubit
+        .signupWithEmail(
+            UserModel(
+              name: cubit.nameController.text,
+              email: cubit.emailController.text,
+              phone: cubit.emailController.text,
+            ),
+            cubit.passwordController.text)
+        .th;
   }
 }

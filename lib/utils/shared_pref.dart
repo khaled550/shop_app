@@ -1,3 +1,4 @@
+import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPref {
@@ -5,6 +6,7 @@ class SharedPref {
 
   static init() async {
     sharedPreferences = await SharedPreferences.getInstance();
+    await Settings.init(cacheProvider: SharePreferenceCache());
   }
 
   static bool? getBooleanData({

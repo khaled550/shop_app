@@ -40,7 +40,7 @@ class AppRouter {
         return MaterialPageRoute(
             builder: (_) => BlocProvider(
                   create: (context) =>
-                      HomePageCubit(context: context, repo: repo)..loadHomePageData(),
+                      HomePageCubit(context: context, repo: repo)..loadHomePageData(context),
                   child: const HomeLayout(),
                 ));
       case "/on_boarding":

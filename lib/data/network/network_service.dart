@@ -7,6 +7,7 @@ import 'package:shop_app/data/model/product_model.dart';
 import 'package:shop_app/data/model/signup_model.dart';
 import 'package:shop_app/data/network/endpoints.dart';
 import 'package:shop_app/utils/components.dart';
+import 'package:shop_app/utils/shared_pref.dart';
 
 import '../model/user_model.dart';
 
@@ -44,6 +45,20 @@ class NetworkService {
     return await dio.post(url, queryParameters: query, data: data);
   }
 
+  Future<Response> putData(
+      {required String url,
+      required BuildContext context,
+      Map<String, dynamic>? query,
+      required Map<String, dynamic> data,
+      String token = ''}) async {
+    dio.options.headers = {
+      'Content-Type': 'application/json',
+      'lang': getAppStrings(context).language,
+      'Authorization': token
+    };
+    return await dio.put(url, queryParameters: query, data: data);
+  }
+
   Future<LoginModel> loginWithEmail(
       {required BuildContext context, required String email, required String password}) async {
     LoginModel loginModel = LoginModel();
@@ -76,10 +91,10 @@ class NetworkService {
     return SignupModel();
   }
 
-  Future<HomeModel> getHomeData() async {
+  Future<HomeModel> getHomeData({required BuildContext context}) async {
     HomeModel homeModel = HomeModel();
-    print(USER_TOKEN);
-    /* await getData(url: HOME_DATA, token: USER_TOKEN).then((value) {
+    /* print(USER_TOKEN);
+    await getData(url: HOME_DATA, context: context, token: USER_TOKEN).then((value) {
       homeModel = HomeModel.fromJson(value.data);
       print('User getHomeData: ${homeModel.data!.banners!.length}');
       print(homeModel);
@@ -107,13 +122,73 @@ class NetworkService {
     required BuildContext context,
   }) async {
     ProductModel productModel = ProductModel();
-    await getData(context: context, url: PRODUCTS_DATA).then((value) {
+    await getData(context: context, url: PRODUCTS_DATA, token: USER_TOKEN).then((value) {
       productModel = ProductModel.fromJson(value.data);
       print('User getProductsData: ${value.data}');
     }).onError((error, stackTrace) {
       print(error.toString());
     });
     return productModel;
+  }
+
+  Future<bool> updateFav({
+    required BuildContext context,
+    required int id,
+  }) async {
+    bool status = false;
+    await postData(
+            context: context,
+            url: ADD_FAV,
+            data: {
+              'product_id': id,
+            },
+            token: USER_TOKEN)
+        .then((value) {
+      status = value.data['status'];
+      print('updateFav: $value');
+      return value.data;
+    }).onError((error, stackTrace) {
+      print(error.toString());
+    });
+    return status;
+  }
+
+  Future<UserModel> getProfileData({required BuildContext context}) async {
+    UserModel userModel = UserModel();
+    await getData(url: PROFILE_DATA, context: context, token: USER_TOKEN).then((value) {
+      userModel = UserModel.fromJson(value.data['data']);
+      print(value.data);
+      print('User getProfileData: ${userModel.email}');
+      SharedPref.putData(key: 'token', value: userModel.token).whenComplete(() {
+        print('User getProfileData: ${userModel.token} saved');
+      });
+    }).onError((error, stackTrace) {
+      print(error.toString());
+    });
+    return userModel;
+  }
+
+  Future<UserModel> updateProfileData(
+      {required BuildContext context,
+      required String name,
+      required String email,
+      required String phone}) async {
+    UserModel userModel = UserModel();
+    await putData(
+        url: UPDATE_PROFILE_DATA,
+        context: context,
+        token: USER_TOKEN,
+        data: {'name': name, 'phone': phone, 'email': email}).then((value) {
+      userModel = UserModel.fromJson(value.data['data']);
+      print(value.data);
+      print('User getProfileData: ${userModel.email}');
+      SharedPref.putData(key: 'token', value: userModel.token).whenComplete(() {
+        print('User getProfileData: ${userModel.token} saved');
+      });
+    }).onError((error, stackTrace) {
+      print(error.toString());
+    });
+    return userModel;
   }
 
   Map<String, dynamic> myHomeData = {

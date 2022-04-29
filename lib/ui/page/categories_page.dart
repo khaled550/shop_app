@@ -63,21 +63,14 @@ class CategoriesPage extends StatelessWidget {
     List<NavigationRailDestination> list = [];
     for (var element in cats) {
       list.add(NavigationRailDestination(
-          icon: Container(
-            height: Dimentions.dp60,
-            width: Dimentions.dp60,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: Colors.white24,
-                image: DecorationImage(fit: BoxFit.cover, image: NetworkImage(element.image!))),
-          ),
-          label: smallText(text: element.name!, color: AppColors.mainBlackColor)));
+          icon: buildCatsItem(element), label: const Text(''), padding: EdgeInsets.zero));
     }
     return list;
   }
 
-  _buildProductItems(BuildContext context) =>
-      SizedBox(height: double.maxFinite, child: myGrid(products: cubit!.productModel!.products!));
+  _buildProductItems(BuildContext context) => SizedBox(
+      height: double.maxFinite,
+      child: myGrid(products: cubit!.productModel!.products!, favProducts: cubit!.favProducts!));
   /*buildGridView(
           itemBuilder: ((context, index) {
             return buildProductItem(
