@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shop_app/utils/dimentions.dart';
 
 import '../../cubit/home_cubit/home_page_cubit.dart';
 import '../../cubit/home_cubit/home_page_state.dart';
 import '../../data/model/category_model.dart';
-import '../../utils/colors.dart';
-import '../../utils/components.dart';
+import '../widgets.dart';
 
 class CategoriesPage extends StatelessWidget {
   HomePageCubit? cubit;
@@ -25,8 +23,12 @@ class CategoriesPage extends StatelessWidget {
   _buildCategoriesPage(BuildContext context) => Center(
         child: NestedScrollView(
             physics: const NeverScrollableScrollPhysics(),
-            headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) =>
-                [mySliverAppBar(getAppStrings(context).gn_cat)],
+            headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) => [
+                  myAppBar(
+                    tite: getAppStrings(context).gn_cat,
+                    onSearchPressed: () {},
+                  )
+                ],
             body: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -70,7 +72,7 @@ class CategoriesPage extends StatelessWidget {
 
   _buildProductItems(BuildContext context) => SizedBox(
       height: double.maxFinite,
-      child: myGrid(products: cubit!.productModel!.products!, favProducts: cubit!.favProducts!));
+      child: myGrid(products: cubit!.productModel!.products!, favProducts: cubit!.isFavouriteMap));
   /*buildGridView(
           itemBuilder: ((context, index) {
             return buildProductItem(

@@ -1,23 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/cubit/home_cubit/home_page_cubit.dart';
-import 'package:shop_app/cubit/produst_cubit/product_details_cubit.dart';
-import 'package:shop_app/data/network/repo.dart';
+import 'package:shop_app/data/model/product_model.dart';
+import 'package:shop_app/data/repos/home_repo.dart';
+import 'package:shop_app/data/repos/login_signup_repo.dart';
 import 'package:shop_app/ui/page/home_layout.dart';
 import 'package:shop_app/ui/page/login_signup_page.dart';
 import 'package:shop_app/ui/page/on_boarding_page.dart';
 import 'package:shop_app/ui/page/product_details.dart';
 
-import '../cubit/login_cubit/login_cubit.dart';
-import '../constants/strings.dart';
-import '../data/network/network_service.dart';
-import '../constants/shared_pref.dart';
+import 'cubit/login_cubit/login_cubit.dart';
+import 'constants/strings.dart';
+import 'data/api/home_api.dart';
+import 'data/api/login_signup_api.dart';
+import 'constants/shared_pref.dart';
+import 'ui/page/search_page.dart';
 
 class AppRouter {
-  late Repo repo;
+  late LoginSignupRepo loginSignupRepo;
+  late HomeRepo homeRepo;
+  late HomePageCubit homePageCubit;
 
   AppRouter() {
-    repo = Repo(networkService: NetworkService());
+    loginSignupRepo = LoginSignupRepo(loginSignupApi: LoginSignupApi());
+    homeRepo = HomeRepo(homeApi: HomeApi());
+    homePageCubit = HomePageCubit(repo: homeRepo);
+    //homePageCubit = HomePageCubit(repo: homeRepo);
   }
 
   Route? generateRoute(RouteSettings settings) {
@@ -35,28 +43,32 @@ class AppRouter {
       case "/":
         return MaterialPageRoute(
             builder: (_) => BlocProvider(
-                  create: (context) => LoginCubit(context: context, repo: repo),
+                  create: (context) => LoginCubit(repo: loginSignupRepo),
                   child: const LoginSignupPage(),
                 ));
-      case "/home":
+      case HOME_PAGE_PATH:
         return MaterialPageRoute(
-            builder: (_) => BlocProvider(
-                  create: (context) =>
-                      HomePageCubit(context: context, repo: repo)..loadHomePageData(context),
+            builder: (context) => BlocProvider.value(
+                  value: homePageCubit..loadHomePageData(context),
                   child: const HomeLayout(),
                 ));
-      case "/product_details":
+      case PRODUCT_PAGE_PATH:
+        final product = settings.arguments as Product;
         return MaterialPageRoute(
-            builder: (_) => BlocProvider.value(
-              value: ,
-                  create: (context) => ProductDetailsCubit(context: context, repo: repo),
-                  child: ProductDetailsPage(),
+            builder: (context) => BlocProvider.value(
+                  value: homePageCubit,
+                  child: ProductDetailsPage(product: product),
                 ),
             settings: settings);
       case "/on_boarding":
         return MaterialPageRoute(builder: (_) => const OnBoardingPage());
-      default:
-        return null;
+      case SEARCH_PAGE_PATH:
+        return MaterialPageRoute(
+            builder: (_) => BlocProvider.value(
+                  value: homePageCubit,
+                  child: SearchProductPage(),
+                ));
     }
+    return null;
   }
 }

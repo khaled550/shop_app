@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-import 'package:shop_app/data/network/endpoints.dart';
-import 'package:shop_app/ui/app_router.dart';
+import 'package:shop_app/constants/strings.dart';
+import 'package:shop_app/app_router.dart';
 import 'package:shop_app/l10n/l10n.dart';
-import 'package:shop_app/utils/MyBlocObserver.dart';
+import 'package:shop_app/constants/MyBlocObserver.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'data/network/network_service.dart';
-import 'utils/shared_pref.dart';
-import 'utils/styles.dart';
+import 'data/dio_helper.dart';
+import 'constants/shared_pref.dart';
+import 'constants/styles.dart';
 
 void initialization() async {
   /* print('ready in 3...');
@@ -25,7 +25,7 @@ void initialization() async {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  NetworkService.init();
+  DioHelper.init();
 
   await SharedPref.init();
   BlocOverrides.runZoned(
@@ -84,7 +84,7 @@ class MyApp extends StatelessWidget {
             theme: appTheme(),
             darkTheme: appDarkTheme(),
             themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
-            //home: LoginPage(),
+            //home: ProductDetailsPage(),
           );
         });
   }

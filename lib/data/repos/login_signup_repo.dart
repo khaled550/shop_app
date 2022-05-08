@@ -1,61 +1,24 @@
-import 'package:flutter/cupertino.dart';
-import 'package:shop_app/data/model/category_model.dart';
-import 'package:shop_app/data/model/home_model.dart';
 import 'package:shop_app/data/model/login_model.dart';
-import 'package:shop_app/data/model/product_model.dart';
 import 'package:shop_app/data/model/signup_model.dart';
 import 'package:shop_app/data/model/user_model.dart';
 
-import 'network_service.dart';
+import '../api/login_signup_api.dart';
 
-class Repo {
-  late final NetworkService networkService;
+class LoginSignupRepo {
+  late final LoginSignupApi loginSignupApi;
 
-  Repo({required this.networkService});
+  LoginSignupRepo({required this.loginSignupApi});
 
   Future<LoginModel> loginWithEmail(
-      {required BuildContext context, required String email, required String password}) async {
-    return await networkService.loginWithEmail(context: context, email: email, password: password);
+      {required String lang, required String email, required String password}) async {
+    return await loginSignupApi.loginWithEmail(lang: lang, email: email, password: password);
   }
 
-  Future<SignupModel> signupWithEmail(
-      {required BuildContext context,
-      required UserModel userModel,
-      required String password}) async {
-    return await networkService.signupWithEmail(
-        context: context, user: userModel, password: password);
-  }
-
-  Future<HomeModel> getHomeData(BuildContext context) async {
-    return await networkService.getHomeData(context: context);
-  }
-
-  Future<CategoryModel> getCatsData({required BuildContext context}) async {
-    return await networkService.getCatsData(context: context);
-  }
-
-  Future<ProductModel> getProductsData({required BuildContext context}) async {
-    return await networkService.getProductsData(context: context);
-  }
-
-  Future<bool> updateFav({required BuildContext context, required int id}) async {
-    return await networkService.updateCartFav(context: context, id: id, isCart: false);
-  }
-
-  Future<bool> updateCart({required BuildContext context, required int id}) async {
-    return await networkService.updateCartFav(context: context, id: id, isCart: true);
-  }
-
-  Future<UserModel> getProfileData({required BuildContext context}) async {
-    return await networkService.getProfileData(context: context);
-  }
-
-  Future<UserModel> updateProfileData(
-      {required BuildContext context,
-      required String name,
-      required String email,
-      required String phone}) async {
-    return await networkService.updateProfileData(
-        context: context, name: name, email: email, phone: phone);
+  Future<SignupModel> signupWithEmail({
+    required UserModel userModel,
+    required String password,
+    required String lang,
+  }) async {
+    return await loginSignupApi.signupWithEmail(lang: lang, user: userModel, password: password);
   }
 }

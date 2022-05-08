@@ -4,27 +4,45 @@ import 'package:shop_app/data/model/category_model.dart';
 import 'package:shop_app/data/model/home_model.dart';
 import 'package:shop_app/data/model/product_model.dart';
 import 'package:shop_app/data/model/user_model.dart';
+import 'package:shop_app/data/repos/home_repo.dart';
 import 'package:shop_app/ui/page/categories_page.dart';
 import 'package:shop_app/ui/page/home_page.dart';
 import 'package:shop_app/ui/page/orders_page.dart';
 import 'package:shop_app/ui/page/settings_page.dart';
+import 'package:shop_app/ui/widgets.dart';
 
 import '../../data/model/user_model.dart';
-import '../../data/network/repo.dart';
+import '../../ui/page/search_page.dart';
 import 'home_page_state.dart';
 
 class HomePageCubit extends Cubit<HomeLayoutState> {
-  final Repo repo;
-  final BuildContext? context;
-  HomePageCubit({required this.context, required this.repo}) : super(HomeLayoutInitial());
+  final HomeRepo repo;
+  //final BuildContext context;
+  HomePageCubit({required this.repo}) : super(HomeLayoutInitial());
 
   static HomePageCubit get(context) => BlocProvider.of(context);
 
   //NavigationBar items
   int currNavIndex = 0;
-  List<Widget> pages = [HomePage(), CategoriesPage(), OrdersPage(), SettingsPage()];
+  List<Widget> pages = [
+    HomePage(),
+    CategoriesPage(),
+    OrdersPage(),
+    SettingsPage(),
+    SearchProductPage(),
+  ];
 
-  void changeNavBar(int index) {
+  String getTitle(BuildContext context) {
+    List<String> pagesTitles = [
+      getAppStrings(context).app_title,
+      getAppStrings(context).app_title,
+      getAppStrings(context).app_title,
+      getAppStrings(context).app_title,
+    ];
+    return pagesTitles[currNavIndex];
+  }
+
+  void changeNavBarTab(int index) {
     currNavIndex = index;
     emit(NavBarChangeState());
   }
@@ -43,9 +61,9 @@ class HomePageCubit extends Cubit<HomeLayoutState> {
 
   loadHomePageData(BuildContext context) {
     emit(HomePageLoadingState());
-    repo.getHomeData(context).then((value) {
+    repo.getHomeData(getAppStrings(context).language).then((value) {
       homeModel = value;
-      loadHomePageCatsData();
+      loadHomePageCatsData(context);
     }).onError((error, stackTrace) {
       print(error);
       emit(HomePageFailedState(error.toString()));
@@ -53,10 +71,10 @@ class HomePageCubit extends Cubit<HomeLayoutState> {
   }
 
   CategoryModel? categoryModel;
-  loadHomePageCatsData() {
-    repo.getCatsData(context: context!).then((value) {
+  loadHomePageCatsData(BuildContext context) {
+    repo.getCatsData(lang: getAppStrings(context).language).then((value) {
       categoryModel = value;
-      loadProductsData();
+      loadProductsData(context);
     }).onError((error, stackTrace) {
       print(error);
       emit(HomeCatsFailedState(error.toString()));
@@ -65,19 +83,20 @@ class HomePageCubit extends Cubit<HomeLayoutState> {
 
   //load products
   ProductModel? productModel;
-  Map<int, bool>? favProducts = {};
-  loadProductsData() {
-    repo.getProductsData(context: context!).then((value) {
+  Map<int, bool> isFavouriteMap = {};
+  Map<int, bool> inCartMap = {};
+  loadProductsData(BuildContext context) {
+    repo.getProductsData(lang: getAppStrings(context).language).then((value) {
       productModel = value;
-
       for (var element in value.products!) {
-        print('FavData: ${element.inFavorites} for id: ${element.id}');
-        print('addedd');
-        favProducts!.addAll({
+        isFavouriteMap.addAll({
           element.id!: element.inFavorites!,
         });
+        inCartMap.addAll({
+          element.id!: element.inCart!,
+        });
       }
-      loadProfileData();
+      loadProfileData(context);
     }).onError((error, stackTrace) {
       print(error);
       emit(HomeCatsFailedState(error.toString()));
@@ -86,10 +105,10 @@ class HomePageCubit extends Cubit<HomeLayoutState> {
 
   //update favourite
   Future<bool> updateFav({required BuildContext context, required int id}) async {
-    return repo.updateFav(context: context, id: id).then((value) {
-      print(favProducts!);
+    return repo.updateFav(id: id, lang: getAppStrings(context).language).then((value) {
+      print(isFavouriteMap);
       if (value) {
-        favProducts![id] = !favProducts![id]!;
+        isFavouriteMap[id] = !isFavouriteMap[id]!;
         emit(UpdateFavSucState());
       } else {
         emit(UpdateFavFailedState('try again'));
@@ -108,8 +127,8 @@ class HomePageCubit extends Cubit<HomeLayoutState> {
   TextEditingController phoneController = TextEditingController();
 
   UserModel userProfile = UserModel();
-  loadProfileData() {
-    repo.getProfileData(context: context!).then((value) {
+  loadProfileData(BuildContext context) {
+    repo.getProfileData(lang: getAppStrings(context).language).then((value) {
       userProfile = value;
       emailController.text = userProfile.email!;
       nameController.text = userProfile.name!;
@@ -123,11 +142,11 @@ class HomePageCubit extends Cubit<HomeLayoutState> {
     });
   }
 
-  updateProfileData() {
+  updateProfileData(String lang) {
     emit(UpdateProfileDataLoadingState());
     repo
         .updateProfileData(
-            context: context!,
+            lang: lang,
             name: nameController.text,
             email: emailController.text,
             phone: phoneController.text)
@@ -138,5 +157,45 @@ class HomePageCubit extends Cubit<HomeLayoutState> {
       print(error);
       emit(UpdateProfileDataFailedState(error.toString()));
     });
+  }
+
+  //update cart items
+  bool updateItemInCart({
+    required BuildContext context,
+    required int productId,
+  }) {
+    emit(UpdateCartDataLoadingState());
+    repo
+        .updateCart(
+      lang: getAppStrings(context),
+      id: productId,
+    )
+        .then((value) {
+      print(isFavouriteMap);
+      if (value) {
+        inCartMap[productId] = !inCartMap[productId]!;
+        emit(UpdateCartDataSucState());
+      } else {
+        emit(UpdateCartDataFailedState('try again'));
+      }
+      return value;
+    }).onError((error, stackTrace) {
+      emit(UpdateCartDataFailedState(error.toString()));
+      return false;
+    });
+    return false;
+  }
+
+  //Search Page
+  List<Product> searchedProducts = [];
+  void updateSearchList(String productName) {
+    if (productName.isNotEmpty && productModel != null) {
+      searchedProducts = productModel!.products!
+          .where((product) => product.name!.toLowerCase().startsWith(productName))
+          .toList();
+    } else {
+      searchedProducts = [];
+    }
+    emit(UpdateSearchedListState(searchedProducts));
   }
 }

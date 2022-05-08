@@ -3,11 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:shop_app/cubit/home_cubit/home_page_cubit.dart';
-import 'package:shop_app/utils/colors.dart';
-import 'package:shop_app/utils/components.dart';
+import 'package:shop_app/constants/colors.dart';
+import 'package:shop_app/ui/widgets.dart';
 
 import '../../cubit/home_cubit/home_page_state.dart';
-import '../../data/network/endpoints.dart';
+import '../../constants/strings.dart';
 
 class HomeLayout extends StatelessWidget {
   const HomeLayout({Key? key}) : super(key: key);
@@ -18,17 +18,22 @@ class HomeLayout extends StatelessWidget {
     return BlocBuilder<HomePageCubit, HomeLayoutState>(
       builder: (context, state) {
         return Scaffold(
+          appBar: myAppBar(
+              tite: cubit.getTitle(context),
+              onSearchPressed: () {
+                //cubit.changeNavBarTab(4);
+                navigateTo(context: context, pagePath: SEARCH_PAGE_PATH);
+              }),
           body: cubit.isLoaded
               ? cubit.pages[cubit.currNavIndex]
               : const Center(child: CircularProgressIndicator()),
-          bottomNavigationBar: buildNavBar(context),
+          bottomNavigationBar: buildNavBar(context, cubit),
         );
       },
     );
   }
 
-  Widget buildNavBar(BuildContext context) {
-    HomePageCubit cubit = HomePageCubit.get(context);
+  Widget buildNavBar(BuildContext context, HomePageCubit cubit) {
     return Container(
       width: double.maxFinite,
       padding: const EdgeInsets.all(8.0),
@@ -51,7 +56,7 @@ class HomeLayout extends StatelessWidget {
           padding:
               const EdgeInsets.symmetric(horizontal: 20, vertical: 5), // navigation bar padding
           onTabChange: (index) {
-            cubit.changeNavBar(index);
+            cubit.changeNavBarTab(index);
           },
           tabs: [
             gnBtn(text: getAppStrings(context).gn_home, icon: Icons.home),

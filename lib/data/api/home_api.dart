@@ -1,97 +1,13 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:shop_app/data/model/category_model.dart';
 import 'package:shop_app/data/model/home_model.dart';
-import 'package:shop_app/data/model/login_model.dart';
 import 'package:shop_app/data/model/product_model.dart';
-import 'package:shop_app/data/model/signup_model.dart';
 import 'package:shop_app/constants/strings.dart';
-import 'package:shop_app/ui/widgets.dart';
-import 'package:shop_app/constants/shared_pref.dart';
 
-import '../model/user_model.dart';
+import '../dio_helper.dart';
 
-class NetworkService {
-  static late Dio dio;
-
-  static init() {
-    dio = Dio(BaseOptions(baseUrl: BASE_URL, receiveDataWhenStatusError: true));
-  }
-
-  Future<Response> getData(
-      {required String url,
-      required BuildContext context,
-      Map<String, dynamic>? query,
-      String token = ''}) async {
-    dio.options.headers = {
-      'Content-Type': 'application/json',
-      'lang': getAppStrings(context).language,
-      'Authorization': token
-    };
-    return await dio.get(url, queryParameters: query);
-  }
-
-  Future<Response> postData(
-      {required String url,
-      required BuildContext context,
-      Map<String, dynamic>? query,
-      required Map<String, dynamic> data,
-      String token = ''}) async {
-    dio.options.headers = {
-      'Content-Type': 'application/json',
-      'lang': getAppStrings(context).language,
-      'Authorization': token
-    };
-    return await dio.post(url, queryParameters: query, data: data);
-  }
-
-  Future<Response> putData(
-      {required String url,
-      required BuildContext context,
-      Map<String, dynamic>? query,
-      required Map<String, dynamic> data,
-      String token = ''}) async {
-    dio.options.headers = {
-      'Content-Type': 'application/json',
-      'lang': getAppStrings(context).language,
-      'Authorization': token
-    };
-    return await dio.put(url, queryParameters: query, data: data);
-  }
-
-  Future<LoginModel> loginWithEmail(
-      {required BuildContext context, required String email, required String password}) async {
-    LoginModel loginModel = LoginModel();
-    await postData(context: context, url: LOGIN, data: {
-      'email': email,
-      'password': password,
-    }).then((value) {
-      print('User login: ${value.data}');
-      loginModel = LoginModel.fromJson(value.data);
-    }).onError((error, stackTrace) {
-      print(error.toString());
-    });
-    return loginModel;
-  }
-
-  Future<SignupModel> signupWithEmail(
-      {required BuildContext context, required UserModel user, required String password}) async {
-    await postData(context: context, url: SIGNUP, data: {
-      'name': user.name,
-      'email': user.email,
-      'password': password,
-      'phone': user.phone,
-    }).then((value) {
-      print('User signup: ${value.data['data']['token']}');
-      return value.data;
-    }).onError((error, stackTrace) {
-      print(error.toString());
-      SignupModel();
-    });
-    return SignupModel();
-  }
-
-  Future<HomeModel> getHomeData({required BuildContext context}) async {
+class HomeApi {
+  Future<HomeModel> getHomeData() async {
     HomeModel homeModel = HomeModel();
     /* print(USER_TOKEN);
     await getData(url: HOME_DATA, context: context, token: USER_TOKEN).then((value) {
@@ -106,10 +22,13 @@ class NetworkService {
   }
 
   Future<CategoryModel> getCatsData({
-    required BuildContext context,
+    required String lang,
   }) async {
     CategoryModel categoryModel = CategoryModel();
-    await getData(context: context, url: CATS_DATA).then((value) {
+    await DioHelper.getData(
+      lang: lang,
+      url: CATS_DATA,
+    ).then((value) {
       categoryModel = CategoryModel.fromJson(value.data);
       print('User getCatsData: ${categoryModel.cats!.length}');
     }).onError((error, stackTrace) {
@@ -119,10 +38,14 @@ class NetworkService {
   }
 
   Future<ProductModel> getProductsData({
-    required BuildContext context,
+    required String lang,
   }) async {
     ProductModel productModel = ProductModel();
-    await getData(context: context, url: PRODUCTS_DATA, token: USER_TOKEN).then((value) {
+    await DioHelper.getData(
+      lang: lang,
+      url: PRODUCTS_DATA,
+      token: USER_TOKEN,
+    ).then((value) {
       productModel = ProductModel.fromJson(value.data);
       print('User getProductsData: ${value.data}');
     }).onError((error, stackTrace) {
@@ -131,11 +54,14 @@ class NetworkService {
     return productModel;
   }
 
-  Future<bool> updateCartFav(
-      {required BuildContext context, required int id, required bool isCart}) async {
+  Future<bool> updateCartFav({
+    required String lang,
+    required int id,
+    required bool isCart,
+  }) async {
     bool status = false;
-    await postData(
-            context: context,
+    await DioHelper.postData(
+            lang: lang,
             url: isCart ? CART_DATA : ADD_FAV,
             data: {
               'product_id': id,
@@ -151,30 +77,28 @@ class NetworkService {
     return status;
   }
 
-  Future<UserModel> getProfileData({required BuildContext context}) async {
-    UserModel userModel = UserModel();
-    await getData(url: PROFILE_DATA, context: context, token: USER_TOKEN).then((value) {
-      userModel = UserModel.fromJson(value.data['data']);
-      SharedPref.putData(key: 'token', value: userModel.token).whenComplete(() {
-        print('User getProfileData: ${userModel.token} saved');
-      });
-    }).onError((error, stackTrace) {
-      print(error.toString());
-    });
-    return userModel;
+  Future<Response> getProfileData({
+    required String lang,
+  }) async {
+    return await DioHelper.getData(
+      url: PROFILE_DATA,
+      lang: lang,
+      token: USER_TOKEN,
+    );
   }
 
-  Future<UserModel> updateProfileData(
-      {required BuildContext context,
-      required String name,
-      required String email,
-      required String phone}) async {
-    UserModel userModel = UserModel();
-    await putData(
-        url: UPDATE_PROFILE_DATA,
-        context: context,
-        token: USER_TOKEN,
-        data: {'name': name, 'phone': phone, 'email': email}).then((value) {
+  Future<Response> updateProfileData({
+    required String lang,
+    required Map<String, dynamic> data,
+  }) async {
+    //UserModel userModel = UserModel();
+    return DioHelper.putData(
+      url: UPDATE_PROFILE_DATA,
+      lang: lang,
+      token: USER_TOKEN,
+      data: data,
+    );
+    /* .then((value) {
       userModel = UserModel.fromJson(value.data['data']);
       print(value.data);
       print('User getProfileData: ${userModel.email}');
@@ -184,7 +108,7 @@ class NetworkService {
     }).onError((error, stackTrace) {
       print(error.toString());
     });
-    return userModel;
+    return userModel; */
   }
 
   Map<String, dynamic> myHomeData = {

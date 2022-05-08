@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-import 'package:shop_app/ui/app_router.dart';
+import 'package:shop_app/app_router.dart';
 import 'package:shop_app/ui/page/login_signup_page.dart';
-import 'package:shop_app/utils/components.dart';
-import 'package:shop_app/utils/shared_pref.dart';
+import 'package:shop_app/ui/widgets.dart';
+import 'package:shop_app/constants/shared_pref.dart';
 
 class OnBoardingPage extends StatelessWidget {
   const OnBoardingPage({Key? key}) : super(key: key);

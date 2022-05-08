@@ -2,12 +2,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
-import 'package:shop_app/data/network/endpoints.dart';
-import 'package:shop_app/utils/components.dart';
+import 'package:shop_app/constants/strings.dart';
+import 'package:shop_app/ui/widgets.dart';
 
 import '../../cubit/home_cubit/home_page_cubit.dart';
 import '../../cubit/home_cubit/home_page_state.dart';
-import '../../utils/shared_pref.dart';
+import '../../constants/shared_pref.dart';
 
 class SettingsPage extends StatelessWidget {
   HomePageCubit? cubit;
@@ -127,7 +127,7 @@ class SettingsPage extends StatelessWidget {
         btnText: getAppStrings(context).edit,
         cubit: cubit!,
         onPressedBtn: () {
-          _submitProfileUpdate();
+          _submitProfileUpdate(getAppStrings(context).language);
         });
   }
 
@@ -173,7 +173,7 @@ class SettingsPage extends StatelessWidget {
         ],
       );
 
-  void _submitProfileUpdate() {
-    cubit!.updateProfileData();
+  void _submitProfileUpdate(String lang) {
+    cubit!.updateProfileData(lang);
   }
 }

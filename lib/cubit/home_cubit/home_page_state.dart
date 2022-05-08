@@ -1,3 +1,5 @@
+import '../../data/model/product_model.dart';
+
 abstract class HomeLayoutState {}
 
 class HomeLayoutInitial extends HomeLayoutState {}
@@ -64,4 +66,24 @@ class UpdateProfileDataFailedState extends HomeLayoutState {
   final String error;
 
   UpdateProfileDataFailedState(this.error);
+}
+
+class UpdateCartDataLoadingState extends HomeLayoutState {
+  UpdateCartDataLoadingState();
+}
+
+class UpdateCartDataSucState extends HomeLayoutState {
+  UpdateCartDataSucState();
+}
+
+class UpdateCartDataFailedState extends HomeLayoutState {
+  final String error;
+
+  UpdateCartDataFailedState(this.error);
+}
+
+class UpdateSearchedListState extends HomeLayoutState {
+  final List<Product> searchedProducts;
+
+  UpdateSearchedListState(this.searchedProducts);
 }

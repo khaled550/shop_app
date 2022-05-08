@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:octo_image/octo_image.dart';
@@ -24,8 +25,7 @@ PageViewModel introPages(String imgPath) => PageViewModel(
     );
 
 // App utills
-navigateTo(
-    {required BuildContext context, required String pagePath, Map<String, dynamic>? arguments}) {
+navigateTo({required BuildContext context, required String pagePath, Object? arguments}) {
   Navigator.pushNamed(context, pagePath, arguments: arguments);
 }
 
@@ -74,20 +74,27 @@ Widget defaultBtn({
       ),
     );
 
-Widget defaultTextField(
-        {required BuildContext context,
-        required String text,
-        required TextEditingController controller,
-        keyboardType = TextInputType.text,
-        isPassword = false,
-        required void Function(String)? onSubmitted,
-        required IconData prefixIcon,
-        IconData? suffixIcon,
-        void Function()? onSuffixPressed,
-        String? validateText,
-        void Function()? onTap,
-        bool enabled = true}) =>
+Widget defaultTextField({
+  required BuildContext context,
+  required String text,
+  required TextEditingController controller,
+  keyboardType = TextInputType.text,
+  isPassword = false,
+  required void Function(String)? onSubmitted,
+  required IconData prefixIcon,
+  IconData? suffixIcon,
+  void Function()? onSuffixPressed,
+  String? validateText,
+  void Function()? onTap,
+  bool enabled = true,
+  void Function(String)? onChanged,
+  FocusNode? focusNode,
+  bool autofocus = false,
+}) =>
     TextFormField(
+      autofocus: autofocus,
+      focusNode: focusNode,
+      onChanged: onChanged,
       enabled: enabled,
       controller: controller,
       keyboardType: keyboardType,
@@ -203,15 +210,19 @@ void showDoneModal(
           ));
 }
 
-SliverAppBar mySliverAppBar(String tite) => SliverAppBar(
-      floating: false,
-      pinned: true,
-      snap: false,
+AppBar myAppBar({required String tite, required void Function()? onSearchPressed}) => AppBar(
       centerTitle: false,
       //leading: IconButton(onPressed: (() {}), icon: const Icon(Icons.menu)),
       title: Text(tite),
       actions: [
-        IconButton(onPressed: (() {}), icon: const Icon(LineIcons.shoppingBag)),
+        IconButton(
+          onPressed: onSearchPressed,
+          icon: const Icon(LineIcons.search),
+        ),
+        IconButton(
+          onPressed: (() {}),
+          icon: const Icon(LineIcons.shoppingBag),
+        ),
       ],
     );
 
@@ -449,129 +460,131 @@ Widget buildCatsItem(Category category) => SizedBox(
 Widget buildProductItem(BuildContext context, Product product, Map<int, bool> favs) =>
     GestureDetector(
       onTap: () {
-        navigateTo(context: context, pagePath: '/product_details', arguments: {
-          'product': product,
-        });
+        navigateTo(context: context, pagePath: '/product_details', arguments: product);
       },
-      child: Container(
-        margin: const EdgeInsets.all(3),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: isDark ? AppColors.mainBlackColor : Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 1,
-              blurRadius: 2,
-              offset: const Offset(0, 1),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: double.maxFinite,
-              child: Stack(
-                alignment: AlignmentDirectional.bottomStart,
-                children: [
-                  CachedNetworkImage(
-                    imageUrl: product.image!,
-                    imageBuilder: (context, imageProvider) => DecoratedBox(
-                      decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+      child: Hero(
+        tag: product.id!,
+        child: Container(
+          margin: const EdgeInsets.all(3),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: isDark ? AppColors.mainBlackColor : Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 1,
+                blurRadius: 2,
+                offset: const Offset(0, 1),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: double.maxFinite,
+                child: Stack(
+                  alignment: AlignmentDirectional.bottomStart,
+                  children: [
+                    CachedNetworkImage(
+                      imageUrl: product.image!,
+                      imageBuilder: (context, imageProvider) => DecoratedBox(
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+                        ),
+                        child: SizedBox(
+                          height: 180,
+                          child: OctoImage(
+                            fit: BoxFit.cover,
+                            image: imageProvider,
+                            progressIndicatorBuilder: (context, progress) {
+                              double value = 0;
+                              if (progress != null && progress.expectedTotalBytes != null) {
+                                value =
+                                    progress.cumulativeBytesLoaded / progress.expectedTotalBytes!;
+                              }
+                              return CircularProgressIndicator(value: value);
+                            },
+                            errorBuilder: (context, error, stack) => Icon(
+                              Icons.error,
+                              color: Theme.of(context).textTheme.bodyText1!.color,
+                            ),
+                          ),
+                        ),
                       ),
-                      child: SizedBox(
-                        height: 180,
-                        child: OctoImage(
-                          fit: BoxFit.cover,
-                          image: imageProvider,
-                          progressIndicatorBuilder: (context, progress) {
-                            double value = 0;
-                            if (progress != null && progress.expectedTotalBytes != null) {
-                              value = progress.cumulativeBytesLoaded / progress.expectedTotalBytes!;
-                            }
-                            return CircularProgressIndicator(value: value);
+                    ),
+                    if (product.discount != 0)
+                      Container(
+                        padding: const EdgeInsets.all(3),
+                        color: Colors.red,
+                        child: bigText(
+                            context: context,
+                            text: getAppStrings(context).discount,
+                            size: 12,
+                            color: Colors.white),
+                      ),
+                    Positioned(
+                        top: 5,
+                        right: 5,
+                        child: GestureDetector(
+                          onTap: () {
+                            print(product.id);
+                            BlocProvider.of<HomePageCubit>(context)
+                                .updateFav(context: context, id: product.id!);
                           },
-                          errorBuilder: (context, error, stack) => Icon(
-                            Icons.error,
-                            color: Theme.of(context).textTheme.bodyText1!.color,
+                          child: Container(
+                            padding: const EdgeInsets.all(2),
+                            decoration:
+                                const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                            child: Icon(
+                              favs[product.id!] ?? false ? Icons.favorite : Icons.favorite_border,
+                              color: Colors.black,
+                            ),
                           ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  if (product.discount != 0)
-                    Container(
-                      padding: const EdgeInsets.all(3),
-                      color: Colors.red,
-                      child: bigText(
-                          context: context,
-                          text: getAppStrings(context).discount,
-                          size: 12,
-                          color: Colors.white),
-                    ),
-                  Positioned(
-                      top: 5,
-                      right: 5,
-                      child: GestureDetector(
-                        onTap: () {
-                          print(product.id);
-
-                          HomePageCubit.get(context).updateFav(context: context, id: product.id!);
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.all(2),
-                          decoration:
-                              const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-                          child: Icon(
-                            favs[product.id!] ?? false ? Icons.favorite : Icons.favorite_border,
-                            color: Colors.black,
-                          ),
-                        ),
-                      )),
-                ],
+                        )),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: smallText(
-                  text: product.name!,
-                  color: isDark ? Colors.white : AppColors.mainBlackColor,
-                  lines: 1,
-                  textOverflow: TextOverflow.clip),
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: Row(
-                children: [
-                  smallText(
-                      text: "${product.price!.toString()} ${getAppStrings(context).price_cur}",
-                      color: isDark ? Colors.white : AppColors.mainBlackColor,
-                      lines: 1,
-                      fontWeight: FontWeight.bold),
-                ],
+              const SizedBox(
+                height: 10,
               ),
-            ),
-            if (product.discount != 0)
               Padding(
                 padding: const EdgeInsets.all(5.0),
                 child: smallText(
-                    text: '${product.oldPrice!}',
+                    text: product.name!,
+                    color: isDark ? Colors.white : AppColors.mainBlackColor,
                     lines: 1,
-                    size: 14,
-                    color: Colors.grey,
-                    fontWeight: FontWeight.bold,
-                    textDecoration: TextDecoration.lineThrough),
-              )
-          ],
+                    textOverflow: TextOverflow.clip),
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: Row(
+                  children: [
+                    smallText(
+                        text: "${product.price!.toString()} ${getAppStrings(context).price_cur}",
+                        color: isDark ? Colors.white : AppColors.mainBlackColor,
+                        lines: 1,
+                        fontWeight: FontWeight.bold),
+                  ],
+                ),
+              ),
+              if (product.discount != 0)
+                Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: smallText(
+                      text: '${product.oldPrice!}',
+                      lines: 1,
+                      size: 14,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.bold,
+                      textDecoration: TextDecoration.lineThrough),
+                )
+            ],
+          ),
         ),
       ),
     );

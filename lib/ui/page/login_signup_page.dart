@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/cubit/login_cubit/login_signup_state.dart';
 import 'package:shop_app/data/model/user_model.dart';
-import 'package:shop_app/data/network/endpoints.dart';
-import 'package:shop_app/utils/components.dart';
-import 'package:shop_app/utils/shared_pref.dart';
+import 'package:shop_app/constants/strings.dart';
+import 'package:shop_app/ui/widgets.dart';
+import 'package:shop_app/constants/shared_pref.dart';
 
 import '../../cubit/login_cubit/login_cubit.dart';
 
@@ -162,23 +162,29 @@ class LoginSignupPage extends StatelessWidget {
     );
   }
 
-  void submitLogin(context, LoginCubit cubit) {
+  void submitLogin(BuildContext context, LoginCubit cubit) {
     //cubit.loginWithEmail('khaled.mohamed@gmail.com', '123456');
     Navigator.pop(context);
-    cubit.loginWithEmail(cubit.emailController.text, cubit.passwordController.text).then((value) {
+    cubit
+        .loginWithEmail(
+      cubit.emailController.text,
+      cubit.passwordController.text,
+      getAppStrings(context).language,
+    )
+        .then((value) {
       if (value) {}
     });
   }
 
-  void submitSignup(LoginCubit cubit) {
-    cubit
-        .signupWithEmail(
-            UserModel(
-              name: cubit.nameController.text,
-              email: cubit.emailController.text,
-              phone: cubit.emailController.text,
-            ),
-            cubit.passwordController.text)
-        .th;
+  void submitSignup(BuildContext context, LoginCubit cubit) {
+    cubit.signupWithEmail(
+      UserModel(
+        name: cubit.nameController.text,
+        email: cubit.emailController.text,
+        phone: cubit.emailController.text,
+      ),
+      cubit.passwordController.text,
+      getAppStrings(context).language,
+    );
   }
 }
