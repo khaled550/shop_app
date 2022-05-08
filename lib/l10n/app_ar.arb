@@ -22,7 +22,7 @@
     "gn_home":"الرئيسية",
     "gn_cat":"الاقسام",
     "gn_orders":"الطلبيات",
-    "gn_profile":"الملف الشخصي",
+    "gn_profile":"حسابي",
     "search_text_field":"البحث",
     "view_all":"اظهار الكل",
     "hot_deals":"عرض اليوم",
@@ -33,8 +33,10 @@
     "settings":"الاعدادت",
     "dark_mode":"الوضع الليلي",
     "lang":"العربية",
-    "account_settings":"اعدادت الحساب",
+    "account_settings":"الحساب",
     "my_lang":"اللغة",
     "logout":"تسجيل الخروج",
-    "updated":"تم التعديل بنجاح"
+    "updated":"تم التعديل بنجاح",
+    "description":"الوصف",
+    "add_to_cart":"اضف الى العربة"
 }

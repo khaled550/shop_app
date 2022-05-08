@@ -33,8 +33,10 @@
     "settings":"Settings",
     "dark_mode":"Dark Mode",
     "my_lang":"Language",
-    "account_settings":"Account settings",
+    "account_settings":"Your Account",
     "lang":"English",
     "logout":"Logout",
-    "updated":"Updated Successfully"
+    "updated":"Updated Successfully",
+    "description":"Description",
+    "add_to_cart":"Add to Cart"
 }
