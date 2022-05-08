@@ -39,7 +39,11 @@ class Repo {
   }
 
   Future<bool> updateFav({required BuildContext context, required int id}) async {
-    return await networkService.updateFav(context: context, id: id);
+    return await networkService.updateCartFav(context: context, id: id, isCart: false);
+  }
+
+  Future<bool> updateCart({required BuildContext context, required int id}) async {
+    return await networkService.updateCartFav(context: context, id: id, isCart: true);
   }
 
   Future<UserModel> getProfileData({required BuildContext context}) async {

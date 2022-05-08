@@ -5,9 +5,9 @@ import 'package:shop_app/data/model/home_model.dart';
 import 'package:shop_app/data/model/login_model.dart';
 import 'package:shop_app/data/model/product_model.dart';
 import 'package:shop_app/data/model/signup_model.dart';
-import 'package:shop_app/data/network/endpoints.dart';
-import 'package:shop_app/utils/components.dart';
-import 'package:shop_app/utils/shared_pref.dart';
+import 'package:shop_app/constants/strings.dart';
+import 'package:shop_app/ui/widgets.dart';
+import 'package:shop_app/constants/shared_pref.dart';
 
 import '../model/user_model.dart';
 
@@ -131,21 +131,19 @@ class NetworkService {
     return productModel;
   }
 
-  Future<bool> updateFav({
-    required BuildContext context,
-    required int id,
-  }) async {
+  Future<bool> updateCartFav(
+      {required BuildContext context, required int id, required bool isCart}) async {
     bool status = false;
     await postData(
             context: context,
-            url: ADD_FAV,
+            url: isCart ? CART_DATA : ADD_FAV,
             data: {
               'product_id': id,
             },
             token: USER_TOKEN)
         .then((value) {
       status = value.data['status'];
-      print('updateFav: $value');
+      print('updateCartFav: $value');
       return value.data;
     }).onError((error, stackTrace) {
       print(error.toString());
@@ -157,8 +155,6 @@ class NetworkService {
     UserModel userModel = UserModel();
     await getData(url: PROFILE_DATA, context: context, token: USER_TOKEN).then((value) {
       userModel = UserModel.fromJson(value.data['data']);
-      print(value.data);
-      print('User getProfileData: ${userModel.email}');
       SharedPref.putData(key: 'token', value: userModel.token).whenComplete(() {
         print('User getProfileData: ${userModel.token} saved');
       });

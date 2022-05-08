@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:octo_image/octo_image.dart';
 import 'package:shop_app/cubit/home_cubit/home_page_cubit.dart';
 import 'package:shop_app/data/model/category_model.dart';
 import 'package:shop_app/data/model/product_model.dart';
@@ -9,8 +10,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
 
-import '../data/network/endpoints.dart';
-import 'colors.dart';
+import '../constants/strings.dart';
+import '../constants/colors.dart';
 
 // onboarding pages list
 PageViewModel introPages(String imgPath) => PageViewModel(
@@ -23,8 +24,9 @@ PageViewModel introPages(String imgPath) => PageViewModel(
     );
 
 // App utills
-navigateTo(BuildContext context, String pagePath) {
-  Navigator.pushNamed(context, pagePath);
+navigateTo(
+    {required BuildContext context, required String pagePath, Map<String, dynamic>? arguments}) {
+  Navigator.pushNamed(context, pagePath, arguments: arguments);
 }
 
 navigateAndReplace(BuildContext context, String pagePath) {
@@ -113,22 +115,23 @@ Widget defaultTextField(
 Widget clickableText(Function()? onPressed, text) =>
     TextButton(onPressed: onPressed, child: Text(text));
 
-Widget bigText({
-  required BuildContext context,
-  required text,
-  double size = 24,
-  overflow = TextOverflow.ellipsis,
-  lines = 1,
-}) =>
+Widget bigText(
+        {required BuildContext context,
+        required text,
+        double size = 24,
+        overflow = TextOverflow.ellipsis,
+        lines = 1,
+        TextAlign textAlign = TextAlign.center,
+        Color? color}) =>
     Text(text,
-        textAlign: TextAlign.center,
+        textAlign: textAlign,
         maxLines: lines,
         overflow: overflow,
         //style: Theme.of(context).textTheme.bodyText1,
         style: TextStyle(
             fontFamily: 'Robot',
             fontSize: size,
-            color: Theme.of(context).textTheme.headline1!.color!,
+            color: color ?? Theme.of(context).textTheme.headline1!.color!,
             fontWeight: FontWeight.bold));
 
 Widget smallText(
@@ -139,11 +142,11 @@ Widget smallText(
         textOverflow = TextOverflow.visible,
         FontWeight fontWeight = FontWeight.normal,
         TextAlign textAlign = TextAlign.start,
-        int lines = 1,
+        int? lines,
         TextDecoration textDecoration = TextDecoration.none}) =>
     Text(text,
         overflow: textOverflow,
-        maxLines: lines,
+        maxLines: (lines != null) ? lines : null,
         textAlign: textAlign,
         style: TextStyle(
             decoration: textDecoration,
@@ -204,15 +207,10 @@ SliverAppBar mySliverAppBar(String tite) => SliverAppBar(
       floating: false,
       pinned: true,
       snap: false,
-      centerTitle: true,
-      leading: IconButton(onPressed: (() {}), icon: const Icon(Icons.menu)),
+      centerTitle: false,
+      //leading: IconButton(onPressed: (() {}), icon: const Icon(Icons.menu)),
       title: Text(tite),
       actions: [
-        IconButton(
-            onPressed: (() {}),
-            icon: const Icon(
-              LineIcons.bell,
-            )),
         IconButton(onPressed: (() {}), icon: const Icon(LineIcons.shoppingBag)),
       ],
     );
@@ -405,7 +403,7 @@ Widget buildCatsItem(Category category) => SizedBox(
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   color: Colors.white24,
-                  image: DecorationImage(fit: BoxFit.contain, image: imageProvider)),
+                  image: DecorationImage(fit: BoxFit.cover, image: imageProvider)),
             ),
             placeholder: (context, url) => Transform.scale(
               scale: 0.2,
@@ -421,7 +419,11 @@ Widget buildCatsItem(Category category) => SizedBox(
           ),
           Container(
               width: double.infinity,
-              color: Colors.black.withOpacity(0.4),
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
+                color: Colors.black.withOpacity(0.4),
+              ),
               child: smallText(
                   text: category.name!, color: Colors.white, lines: 1, textAlign: TextAlign.center))
         ],
@@ -444,109 +446,133 @@ Widget buildCatsItem(Category category) => SizedBox(
       ],
     ); */
 
-Widget buildProductItem(BuildContext context, Product product, Map<int, bool> favs) => Container(
-      margin: const EdgeInsets.all(3),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: isDark ? AppColors.mainBlackColor : Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 1,
-            blurRadius: 2,
-            offset: const Offset(0, 1),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: double.maxFinite,
-            child: Stack(
-              alignment: AlignmentDirectional.bottomStart,
-              children: [
-                CachedNetworkImage(
-                  imageUrl: product.image!,
-                  imageBuilder: (context, imageProvider) => Stack(
-                    children: [
-                      Container(
-                        height: 160,
-                        width: double.maxFinite,
-                        decoration: BoxDecoration(
-                            borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-                            //color: Colors.white24,
-                            image: DecorationImage(image: imageProvider)),
-                      ),
-                    ],
-                  ),
-                  placeholder: (context, url) => const CircularProgressIndicator(),
-                  errorWidget: (context, url, error) => Icon(
-                    Icons.error,
-                    color: Theme.of(context).textTheme.bodyText1!.color,
-                  ),
-                ),
-                if (product.discount != 0)
-                  Container(
-                    padding: const EdgeInsets.all(3),
-                    color: Colors.red,
-                    child:
-                        bigText(context: context, text: getAppStrings(context).discount, size: 12),
-                  ),
-                Positioned(
-                    top: 5,
-                    right: 5,
-                    child: GestureDetector(
-                      onTap: () {
-                        print(product.id);
-                        HomePageCubit.get(context).updateFav(context: context, id: product.id!);
-                      },
-                      child: Icon(
-                        favs[product.id!] ?? false ? Icons.favorite : Icons.favorite_border,
-                        color: Colors.black,
-                      ),
-                    )),
-              ],
+Widget buildProductItem(BuildContext context, Product product, Map<int, bool> favs) =>
+    GestureDetector(
+      onTap: () {
+        navigateTo(context: context, pagePath: '/product_details', arguments: {
+          'product': product,
+        });
+      },
+      child: Container(
+        margin: const EdgeInsets.all(3),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: isDark ? AppColors.mainBlackColor : Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 1,
+              blurRadius: 2,
+              offset: const Offset(0, 1),
             ),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: smallText(
-                text: product.name!,
-                //color: AppColors.mainBlackColor,
-                lines: 1,
-                textOverflow: TextOverflow.clip),
-          ),
-          const SizedBox(
-            height: 5,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: Row(
-              children: [
-                smallText(
-                    text: "${product.price!.toString()} ${getAppStrings(context).price_cur}",
-                    //color: AppColors.mainColor,
-                    lines: 1,
-                    fontWeight: FontWeight.bold),
-              ],
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: double.maxFinite,
+              child: Stack(
+                alignment: AlignmentDirectional.bottomStart,
+                children: [
+                  CachedNetworkImage(
+                    imageUrl: product.image!,
+                    imageBuilder: (context, imageProvider) => DecoratedBox(
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+                      ),
+                      child: SizedBox(
+                        height: 180,
+                        child: OctoImage(
+                          fit: BoxFit.cover,
+                          image: imageProvider,
+                          progressIndicatorBuilder: (context, progress) {
+                            double value = 0;
+                            if (progress != null && progress.expectedTotalBytes != null) {
+                              value = progress.cumulativeBytesLoaded / progress.expectedTotalBytes!;
+                            }
+                            return CircularProgressIndicator(value: value);
+                          },
+                          errorBuilder: (context, error, stack) => Icon(
+                            Icons.error,
+                            color: Theme.of(context).textTheme.bodyText1!.color,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  if (product.discount != 0)
+                    Container(
+                      padding: const EdgeInsets.all(3),
+                      color: Colors.red,
+                      child: bigText(
+                          context: context,
+                          text: getAppStrings(context).discount,
+                          size: 12,
+                          color: Colors.white),
+                    ),
+                  Positioned(
+                      top: 5,
+                      right: 5,
+                      child: GestureDetector(
+                        onTap: () {
+                          print(product.id);
+
+                          HomePageCubit.get(context).updateFav(context: context, id: product.id!);
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(2),
+                          decoration:
+                              const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                          child: Icon(
+                            favs[product.id!] ?? false ? Icons.favorite : Icons.favorite_border,
+                            color: Colors.black,
+                          ),
+                        ),
+                      )),
+                ],
+              ),
             ),
-          ),
-          if (product.discount != 0)
+            const SizedBox(
+              height: 10,
+            ),
             Padding(
               padding: const EdgeInsets.all(5.0),
               child: smallText(
-                  text: '${product.oldPrice!}',
+                  text: product.name!,
+                  color: isDark ? Colors.white : AppColors.mainBlackColor,
                   lines: 1,
-                  size: 14,
-                  fontWeight: FontWeight.bold,
-                  textDecoration: TextDecoration.lineThrough),
-            )
-        ],
+                  textOverflow: TextOverflow.clip),
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: Row(
+                children: [
+                  smallText(
+                      text: "${product.price!.toString()} ${getAppStrings(context).price_cur}",
+                      color: isDark ? Colors.white : AppColors.mainBlackColor,
+                      lines: 1,
+                      fontWeight: FontWeight.bold),
+                ],
+              ),
+            ),
+            if (product.discount != 0)
+              Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: smallText(
+                    text: '${product.oldPrice!}',
+                    lines: 1,
+                    size: 14,
+                    color: Colors.grey,
+                    fontWeight: FontWeight.bold,
+                    textDecoration: TextDecoration.lineThrough),
+              )
+          ],
+        ),
       ),
     );
 
@@ -570,18 +596,26 @@ buildOrderItem(BuildContext context, Product product) => LimitedBox(
                   const SizedBox(
                     height: 5,
                   ),
-                  smallText(text: 'total price', color: AppColors.mainBlackColor),
+                  smallText(
+                      text: 'total price', color: isDark ? Colors.white : AppColors.mainBlackColor),
                   const SizedBox(
                     height: 5,
                   ),
-                  smallText(text: '\$65', color: AppColors.mainBlackColor),
+                  smallText(
+                      text: '\$65',
+                      color: isDark ? Colors.white : AppColors.mainBlackColor,
+                      fontWeight: FontWeight.bold),
                 ],
               ),
             ),
             Positioned(
                 right: 5,
                 child: IconButton(
-                    onPressed: () {}, icon: const Icon(Icons.navigate_next, color: Colors.black))),
+                    onPressed: () {},
+                    icon: const Icon(
+                      Icons.navigate_next,
+                      size: 25,
+                    ))),
           ],
         ),
       ),
