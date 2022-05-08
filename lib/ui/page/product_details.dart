@@ -2,11 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:octo_image/octo_image.dart';
-import 'package:shop_app/constants/colors.dart';
-import 'package:shop_app/cubit/home_cubit/home_page_cubit.dart';
-import 'package:shop_app/cubit/home_cubit/home_page_state.dart';
-import 'package:shop_app/data/model/product_model.dart';
-import 'package:shop_app/ui/widgets.dart';
+import '../../constants/colors.dart';
+import '../../cubit/home_cubit/home_page_cubit.dart';
+import '../../cubit/home_cubit/home_page_state.dart';
+import '../../data/model/product_model.dart';
+import '../widgets.dart';
 
 class ProductDetailsPage extends StatelessWidget {
   final Product product;
@@ -61,7 +61,8 @@ class ProductDetailsPage extends StatelessWidget {
             progressIndicatorBuilder: (context, progress) {
               double value = 0;
               if (progress != null && progress.expectedTotalBytes != null) {
-                value = progress.cumulativeBytesLoaded / progress.expectedTotalBytes!;
+                value = progress.cumulativeBytesLoaded /
+                    progress.expectedTotalBytes!;
               }
               return CircularProgressIndicator(value: value);
             },
@@ -113,8 +114,8 @@ class ProductDetailsPage extends StatelessWidget {
         width: double.maxFinite,
         padding: const EdgeInsets.symmetric(horizontal: 8),
         decoration: const BoxDecoration(
-            borderRadius:
-                BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20), topRight: Radius.circular(20)),
             color: AppColors.mainColor),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -124,7 +125,8 @@ class ProductDetailsPage extends StatelessWidget {
                 width: 5,
               ),
               smallText(
-                  text: "${product.price!.toString()} ${getAppStrings(context).price_cur}",
+                  text:
+                      "${product.price!.toString()} ${getAppStrings(context).price_cur}",
                   lines: 1,
                   color: Colors.white,
                   fontWeight: FontWeight.bold),
@@ -165,8 +167,8 @@ class ProductDetailsPage extends StatelessWidget {
         ),
       );
 
-  Widget _buildDescriptionText() =>
-      SingleChildScrollView(child: smallText(text: product.description!, size: 12));
+  Widget _buildDescriptionText() => SingleChildScrollView(
+      child: smallText(text: product.description!, size: 12));
 
   //************************************************/
 
@@ -188,7 +190,8 @@ class ProductDetailsPage extends StatelessWidget {
                     height: 300,
                     decoration: BoxDecoration(
                         image: DecorationImage(
-                            fit: BoxFit.cover, image: NetworkImage(product.image!))),
+                            fit: BoxFit.cover,
+                            image: NetworkImage(product.image!))),
                   )),
               Positioned(
                 left: 20,
@@ -223,7 +226,8 @@ class ProductDetailsPage extends StatelessWidget {
                               padding: const EdgeInsets.all(16),
                               decoration: const BoxDecoration(
                                   borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+                                      topLeft: Radius.circular(20),
+                                      topRight: Radius.circular(20)),
                                   color: AppColors.mainBlackColor),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -270,18 +274,24 @@ class ProductDetailsPage extends StatelessWidget {
                                                 size: 14,
                                                 color: Colors.grey,
                                                 fontWeight: FontWeight.bold,
-                                                textDecoration: TextDecoration.lineThrough),
+                                                textDecoration:
+                                                    TextDecoration.lineThrough),
                                           Positioned(
                                             right: 0,
                                             child: ElevatedButton(
                                               style: ButtonStyle(
-                                                  elevation: MaterialStateProperty.all<double>(0),
-                                                  backgroundColor: MaterialStateProperty.all<Color>(
+                                                  elevation:
+                                                      MaterialStateProperty.all<
+                                                          double>(0),
+                                                  backgroundColor:
+                                                      MaterialStateProperty.all<
+                                                          Color>(
                                                     AppColors.mainBlackColor,
                                                   )),
                                               onPressed: () {
                                                 cubit!.updateItemInCart(
-                                                    context: context, productId: 1);
+                                                    context: context,
+                                                    productId: 1);
                                               },
                                               child: bigText(
                                                   text: "Add to Cart",
@@ -305,7 +315,9 @@ class ProductDetailsPage extends StatelessWidget {
                                     height: 5,
                                   ),
                                   SingleChildScrollView(
-                                      child: smallText(text: product.description!, size: 12)),
+                                      child: smallText(
+                                          text: product.description!,
+                                          size: 12)),
                                 ],
                               )),
                         ),

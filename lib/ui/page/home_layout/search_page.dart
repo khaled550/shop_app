@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:line_icons/line_icons.dart';
 
-import '../../cubit/home_cubit/home_page_cubit.dart';
-import '../../cubit/home_cubit/home_page_state.dart';
-import '../../data/model/product_model.dart';
-import '../widgets.dart';
+import '../../../cubit/home_cubit/home_page_cubit.dart';
+import '../../../cubit/home_cubit/home_page_state.dart';
+import '../../../data/model/product_model.dart';
+import '../../widgets.dart';
 
 class SearchProductPage extends StatelessWidget {
   HomePageCubit? cubit;

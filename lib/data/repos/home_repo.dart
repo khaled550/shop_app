@@ -1,7 +1,9 @@
-import 'package:shop_app/data/model/category_model.dart';
-import 'package:shop_app/data/model/home_model.dart';
-import 'package:shop_app/data/model/product_model.dart';
-import 'package:shop_app/data/model/user_model.dart';
+import 'package:shop_app/data/model/cart_model.dart';
+
+import '../model/category_model.dart';
+import '../model/home_model.dart';
+import '../model/product_model.dart';
+import '../model/user_model.dart';
 
 import '../../constants/shared_pref.dart';
 import '../api/home_api.dart';
@@ -21,14 +23,6 @@ class HomeRepo {
 
   Future<ProductModel> getProductsData({required String lang}) async {
     return await homeApi.getProductsData(lang: lang);
-  }
-
-  Future<bool> updateFav({required String lang, required int id}) async {
-    return await homeApi.updateCartFav(lang: lang, id: id, isCart: false);
-  }
-
-  Future<bool> updateCart({required String lang, required int id}) async {
-    return await homeApi.updateCartFav(lang: lang, id: id, isCart: true);
   }
 
   Future<UserModel> getProfileData({required String lang}) async {
@@ -59,5 +53,31 @@ class HomeRepo {
       });
     });
     return userModel;
+  }
+
+  Future<List<CartItem>> getCartItems({
+    required String lang,
+  }) async {
+    List<CartItem> cartItems = [];
+    await homeApi.getCartItems(lang: lang).then((value) {
+      //print(value.data);
+      cartItems.add(CartItem.fromJson(value.data));
+    });
+
+    return cartItems;
+  }
+
+  Future<bool> updateFav({
+    required String lang,
+    required int id,
+  }) async {
+    return await homeApi.updateCartFav(lang: lang, id: id, isCart: false);
+  }
+
+  Future<bool> updateCart({
+    required String lang,
+    required int id,
+  }) async {
+    return await homeApi.updateCartFav(lang: lang, id: id, isCart: true);
   }
 }

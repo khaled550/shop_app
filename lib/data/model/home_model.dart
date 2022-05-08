@@ -1,4 +1,4 @@
-import 'package:shop_app/data/model/product_model.dart';
+import 'product_model.dart';
 
 class HomeModel {
   bool? status;
@@ -29,7 +29,7 @@ class Data {
     if (json['banners'] != null) {
       banners = <Banners>[];
       json['banners'].forEach((v) {
-        banners!.add(new Banners.fromJson(v));
+        banners!.add(Banners.fromJson(v));
       });
     }
   }

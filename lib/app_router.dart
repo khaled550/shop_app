@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shop_app/cubit/home_cubit/home_page_cubit.dart';
-import 'package:shop_app/data/model/product_model.dart';
-import 'package:shop_app/data/repos/home_repo.dart';
-import 'package:shop_app/data/repos/login_signup_repo.dart';
-import 'package:shop_app/ui/page/home_layout.dart';
-import 'package:shop_app/ui/page/login_signup_page.dart';
-import 'package:shop_app/ui/page/on_boarding_page.dart';
-import 'package:shop_app/ui/page/product_details.dart';
+import 'package:shop_app/ui/page/cart_page.dart';
+import 'package:shop_app/ui/page/home_layout/search_page.dart';
+import 'cubit/home_cubit/home_page_cubit.dart';
+import 'data/model/product_model.dart';
+import 'data/repos/home_repo.dart';
+import 'data/repos/login_signup_repo.dart';
+import 'ui/page/home_layout/home_layout.dart';
+import 'ui/page/registration/login_signup_page.dart';
+import 'ui/page/registration/on_boarding_page.dart';
+import 'ui/page/product_details.dart';
 
 import 'cubit/login_cubit/login_cubit.dart';
 import 'constants/strings.dart';
 import 'data/api/home_api.dart';
 import 'data/api/login_signup_api.dart';
 import 'constants/shared_pref.dart';
-import 'ui/page/search_page.dart';
 
 class AppRouter {
   late LoginSignupRepo loginSignupRepo;
@@ -67,6 +68,12 @@ class AppRouter {
             builder: (_) => BlocProvider.value(
                   value: homePageCubit,
                   child: SearchProductPage(),
+                ));
+      case CART_PAGE_PATH:
+        return MaterialPageRoute(
+            builder: (context) => BlocProvider.value(
+                  value: homePageCubit..getCartItems(context: context),
+                  child: const CartPage(),
                 ));
     }
     return null;

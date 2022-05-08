@@ -35,7 +35,17 @@ class Product {
   bool? inFavorites;
   bool? inCart;
 
-  Product({id, price, oldPrice, discount, image, name, description, images, inFavorites, inCart});
+  Product(
+      {id,
+      price,
+      oldPrice,
+      discount,
+      image,
+      name,
+      description,
+      images,
+      inFavorites,
+      inCart});
 
   Product.fromJson(Map<String, dynamic> json) {
     id = json['id'];

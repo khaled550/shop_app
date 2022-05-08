@@ -1,5 +1,4 @@
-import 'package:shop_app/data/model/signup_model.dart';
-import 'package:shop_app/data/model/user_model.dart';
+import '../../data/model/signup_model.dart';
 
 import '../../data/model/login_model.dart';
 

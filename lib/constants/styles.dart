@@ -40,9 +40,10 @@ AppBarTheme myAppBarTheme(
     AppBarTheme(
       actionsIconTheme: IconThemeData(color: secMainColor, size: 30),
       iconTheme: IconThemeData(color: secMainColor),
-      systemOverlayStyle:
-          SystemUiOverlayStyle(statusBarColor: mainColor, statusBarIconBrightness: brightness),
+      systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarColor: mainColor, statusBarIconBrightness: brightness),
       elevation: 0,
       backgroundColor: mainColor,
-      titleTextStyle: TextStyle(color: secMainColor, fontSize: 20, fontWeight: FontWeight.bold),
+      titleTextStyle: TextStyle(
+          color: secMainColor, fontSize: 20, fontWeight: FontWeight.bold),
     );

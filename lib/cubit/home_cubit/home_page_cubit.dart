@@ -1,18 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shop_app/data/model/category_model.dart';
-import 'package:shop_app/data/model/home_model.dart';
-import 'package:shop_app/data/model/product_model.dart';
-import 'package:shop_app/data/model/user_model.dart';
-import 'package:shop_app/data/repos/home_repo.dart';
-import 'package:shop_app/ui/page/categories_page.dart';
-import 'package:shop_app/ui/page/home_page.dart';
-import 'package:shop_app/ui/page/orders_page.dart';
-import 'package:shop_app/ui/page/settings_page.dart';
-import 'package:shop_app/ui/widgets.dart';
-
+import '../../data/model/category_model.dart';
+import '../../data/model/home_model.dart';
+import '../../data/model/product_model.dart';
 import '../../data/model/user_model.dart';
-import '../../ui/page/search_page.dart';
+import '../../data/repos/home_repo.dart';
+import '../../ui/page/home_layout/categories_page.dart';
+import '../../ui/page/home_layout/home_page.dart';
+import '../../ui/page/home_layout/orders_page.dart';
+import '../../ui/page/home_layout/search_page.dart';
+import '../../ui/page/home_layout/settings_page.dart';
+import '../../ui/widgets.dart';
+
 import 'home_page_state.dart';
 
 class HomePageCubit extends Cubit<HomeLayoutState> {
@@ -174,7 +173,7 @@ class HomePageCubit extends Cubit<HomeLayoutState> {
       print(isFavouriteMap);
       if (value) {
         inCartMap[productId] = !inCartMap[productId]!;
-        emit(UpdateCartDataSucState());
+        //emit(UpdateCartDataSucState());
       } else {
         emit(UpdateCartDataFailedState('try again'));
       }
@@ -197,5 +196,18 @@ class HomePageCubit extends Cubit<HomeLayoutState> {
       searchedProducts = [];
     }
     emit(UpdateSearchedListState(searchedProducts));
+  }
+
+  //Cart page
+  //List<CartItem>
+  void getCartItems({
+    required BuildContext context,
+  }) {
+    emit(UpdateCartDataLoadingState());
+    repo.getCartItems(lang: getAppStrings(context).language).then(
+      (cartItems) {
+        emit(UpdateCartDataSucState(cartItems));
+      },
+    );
   }
 }

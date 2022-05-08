@@ -2,13 +2,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shop_app/cubit/home_cubit/home_page_cubit.dart';
-import 'package:shop_app/data/model/home_model.dart';
-import 'package:shop_app/data/model/product_model.dart';
+import '../../../cubit/home_cubit/home_page_cubit.dart';
+import '../../../data/model/category_model.dart';
+import '../../../data/model/home_model.dart';
+import '../../../data/model/product_model.dart';
 
-import '../../cubit/home_cubit/home_page_state.dart';
-import '../../data/model/category_model.dart';
-import '../widgets.dart';
+import '../../../cubit/home_cubit/home_page_state.dart';
+import '../../widgets.dart';
 
 class HomePage extends StatelessWidget {
   HomePageCubit? cubit;

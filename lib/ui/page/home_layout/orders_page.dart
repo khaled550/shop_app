@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../cubit/home_cubit/home_page_cubit.dart';
-import '../../cubit/home_cubit/home_page_state.dart';
-import '../widgets.dart';
+import '../../../cubit/home_cubit/home_page_cubit.dart';
+import '../../../cubit/home_cubit/home_page_state.dart';
+import '../../widgets.dart';
 
 class OrdersPage extends StatelessWidget {
   HomePageCubit? cubit;

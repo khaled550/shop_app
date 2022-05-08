@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
-import 'package:shop_app/data/model/category_model.dart';
-import 'package:shop_app/data/model/home_model.dart';
-import 'package:shop_app/data/model/product_model.dart';
-import 'package:shop_app/constants/strings.dart';
+import '../model/category_model.dart';
+import '../model/home_model.dart';
+import '../model/product_model.dart';
+import '../../constants/strings.dart';
 
 import '../dio_helper.dart';
 
@@ -52,6 +52,16 @@ class HomeApi {
       print(error.toString());
     });
     return productModel;
+  }
+
+  Future<Response<dynamic>> getCartItems({
+    required String lang,
+  }) async {
+    return await DioHelper.getData(
+      url: CART_DATA,
+      lang: lang,
+      token: USER_TOKEN,
+    );
   }
 
   Future<bool> updateCartFav({

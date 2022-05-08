@@ -1,5 +1,5 @@
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
-import 'package:shop_app/constants/shared_pref.dart';
+import 'shared_pref.dart';
 
 //API
 const String BASE_URL = 'https://student.valuxapps.com';

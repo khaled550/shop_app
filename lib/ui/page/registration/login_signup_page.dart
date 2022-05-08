@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shop_app/cubit/login_cubit/login_signup_state.dart';
-import 'package:shop_app/data/model/user_model.dart';
-import 'package:shop_app/constants/strings.dart';
-import 'package:shop_app/ui/widgets.dart';
-import 'package:shop_app/constants/shared_pref.dart';
+import '../../../cubit/login_cubit/login_signup_state.dart';
+import '../../../data/model/user_model.dart';
+import '../../../constants/strings.dart';
+import '../../widgets.dart';
+import '../../../constants/shared_pref.dart';
 
-import '../../cubit/login_cubit/login_cubit.dart';
+import '../../../cubit/login_cubit/login_cubit.dart';
 
 class LoginSignupPage extends StatelessWidget {
   const LoginSignupPage({Key? key}) : super(key: key);
@@ -26,7 +26,8 @@ class LoginSignupPage extends StatelessWidget {
           }
           if (state is LoginSuccessState) {
             if (state.loginModel.status!) {
-              SharedPref.putData(key: 'token', value: state.loginModel.data!.token);
+              SharedPref.putData(
+                  key: 'token', value: state.loginModel.data!.token);
               SharedPref.putData(key: LOGIN_SHARED, value: true).then((value) {
                 if (value) {
                   showDoneModal(
@@ -38,7 +39,9 @@ class LoginSignupPage extends StatelessWidget {
               });
             } else {
               showDoneModal(
-                  context: context, text: state.loginModel.message!, iconData: Icons.error_outline);
+                  context: context,
+                  text: state.loginModel.message!,
+                  iconData: Icons.error_outline);
             }
           } else {}
         },
@@ -56,7 +59,8 @@ class LoginSignupPage extends StatelessWidget {
   Widget buildLoginUI(BuildContext context) {
     LoginCubit cubit = LoginCubit.get(context);
     return Padding(
-      padding: const EdgeInsetsDirectional.only(top: 16, bottom: 30, start: 16, end: 16),
+      padding: const EdgeInsetsDirectional.only(
+          top: 16, bottom: 30, start: 16, end: 16),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

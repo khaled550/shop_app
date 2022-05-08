@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-import 'package:shop_app/constants/strings.dart';
-import 'package:shop_app/app_router.dart';
-import 'package:shop_app/l10n/l10n.dart';
-import 'package:shop_app/constants/MyBlocObserver.dart';
+import 'constants/strings.dart';
+import 'app_router.dart';
+import 'l10n/l10n.dart';
+import 'constants/MyBlocObserver.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'data/dio_helper.dart';

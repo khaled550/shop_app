@@ -1,3 +1,5 @@
+import 'package:shop_app/data/model/cart_model.dart';
+
 import '../../data/model/product_model.dart';
 
 abstract class HomeLayoutState {}
@@ -73,7 +75,8 @@ class UpdateCartDataLoadingState extends HomeLayoutState {
 }
 
 class UpdateCartDataSucState extends HomeLayoutState {
-  UpdateCartDataSucState();
+  final List<CartItem> cartItems;
+  UpdateCartDataSucState(this.cartItems);
 }
 
 class UpdateCartDataFailedState extends HomeLayoutState {

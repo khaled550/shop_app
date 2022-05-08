@@ -2,12 +2,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
-import 'package:shop_app/constants/strings.dart';
-import 'package:shop_app/ui/widgets.dart';
+import '../../../constants/strings.dart';
+import '../../widgets.dart';
 
-import '../../cubit/home_cubit/home_page_cubit.dart';
-import '../../cubit/home_cubit/home_page_state.dart';
-import '../../constants/shared_pref.dart';
+import '../../../cubit/home_cubit/home_page_cubit.dart';
+import '../../../cubit/home_cubit/home_page_state.dart';
+import '../../../constants/shared_pref.dart';
 
 class SettingsPage extends StatelessWidget {
   HomePageCubit? cubit;
@@ -39,7 +39,8 @@ class SettingsPage extends StatelessWidget {
         children: [
           AppBar(
             title: Text(getAppStrings(context).gn_profile),
-            leading: IconButton(onPressed: (() {}), icon: const Icon(Icons.menu)),
+            leading:
+                IconButton(onPressed: (() {}), icon: const Icon(Icons.menu)),
           ),
           Column(
             children: [
@@ -61,12 +62,14 @@ class SettingsPage extends StatelessWidget {
             ),
             Column(
               children: [
-                SettingsGroup(title: getAppStrings(context).settings, children: [
-                  _buildLangToggle(context),
-                  _buildDarkModeToggle(context),
-                  _buildAccountSettings(context),
-                  _buildLogout(context),
-                ])
+                SettingsGroup(
+                    title: getAppStrings(context).settings,
+                    children: [
+                      _buildLangToggle(context),
+                      _buildDarkModeToggle(context),
+                      _buildAccountSettings(context),
+                      _buildLogout(context),
+                    ])
               ],
             )
           ],
@@ -144,7 +147,8 @@ class SettingsPage extends StatelessWidget {
                   //shape: BoxShape.circle,
                   borderRadius: BorderRadius.circular(20),
                   color: Colors.white24,
-                  image: DecorationImage(fit: BoxFit.cover, image: imageProvider)),
+                  image:
+                      DecorationImage(fit: BoxFit.cover, image: imageProvider)),
             ),
             placeholder: (context, url) => Transform.scale(
               scale: 0.2,
@@ -161,7 +165,8 @@ class SettingsPage extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              bigText(context: context, text: cubit!.userProfile.name!, size: 16),
+              bigText(
+                  context: context, text: cubit!.userProfile.name!, size: 16),
               const SizedBox(
                 height: 10,
               ),

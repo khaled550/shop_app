@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:line_icons/line_icons.dart';
-import 'package:shop_app/cubit/home_cubit/home_page_cubit.dart';
-import 'package:shop_app/constants/colors.dart';
-import 'package:shop_app/ui/widgets.dart';
+import '../../../cubit/home_cubit/home_page_cubit.dart';
+import '../../../constants/colors.dart';
+import '../../widgets.dart';
 
-import '../../cubit/home_cubit/home_page_state.dart';
-import '../../constants/strings.dart';
+import '../../../cubit/home_cubit/home_page_state.dart';
+import '../../../constants/strings.dart';
 
 class HomeLayout extends StatelessWidget {
   const HomeLayout({Key? key}) : super(key: key);
@@ -23,6 +23,9 @@ class HomeLayout extends StatelessWidget {
               onSearchPressed: () {
                 //cubit.changeNavBarTab(4);
                 navigateTo(context: context, pagePath: SEARCH_PAGE_PATH);
+              },
+              onCartPressed: () {
+                navigateTo(context: context, pagePath: CART_PAGE_PATH);
               }),
           body: cubit.isLoaded
               ? cubit.pages[cubit.currNavIndex]

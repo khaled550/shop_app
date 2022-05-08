@@ -6,7 +6,9 @@ import '../dio_helper.dart';
 
 class LoginSignupApi {
   Future<LoginModel> loginWithEmail(
-      {required String lang, required String email, required String password}) async {
+      {required String lang,
+      required String email,
+      required String password}) async {
     LoginModel loginModel = LoginModel();
     await DioHelper.postData(lang: lang, url: LOGIN, data: {
       'email': email,
@@ -21,7 +23,9 @@ class LoginSignupApi {
   }
 
   Future<SignupModel> signupWithEmail(
-      {required String lang, required UserModel user, required String password}) async {
+      {required String lang,
+      required UserModel user,
+      required String password}) async {
     await DioHelper.postData(lang: lang, url: SIGNUP, data: {
       'name': user.name,
       'email': user.email,

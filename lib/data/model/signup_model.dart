@@ -1,4 +1,4 @@
-import 'package:shop_app/data/model/user_model.dart';
+import 'user_model.dart';
 
 class SignupModel {
   bool? status;
