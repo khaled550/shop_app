@@ -4,9 +4,9 @@ import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'constants/strings.dart';
 import 'app_router.dart';
-import 'l10n/l10n.dart';
 import 'constants/MyBlocObserver.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:shop_app/generated/l10n.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'data/dio_helper.dart';
 import 'constants/shared_pref.dart';
@@ -78,8 +78,13 @@ class MyApp extends StatelessWidget {
             ),
             //builder: DevicePreview.appBuilder,
             onGenerateRoute: appRouter.generateRoute,
-            supportedLocales: L10n.all,
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: S.delegate.supportedLocales,
+            localizationsDelegates: const [
+              S.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
             debugShowCheckedModeBanner: false,
             theme: appTheme(),
             darkTheme: appDarkTheme(),

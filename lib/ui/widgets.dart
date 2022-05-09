@@ -7,7 +7,7 @@ import 'package:octo_image/octo_image.dart';
 import '../cubit/home_cubit/home_page_cubit.dart';
 import '../data/model/category_model.dart';
 import '../data/model/product_model.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:shop_app/generated/l10n.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
 
@@ -17,7 +17,8 @@ import '../constants/colors.dart';
 // onboarding pages list
 PageViewModel introPages(String imgPath) => PageViewModel(
       title: "Title of first page",
-      body: "Here you can write the description of the page, to explain someting...",
+      body:
+          "Here you can write the description of the page, to explain someting...",
       image: Center(child: Image.asset(imgPath, height: 175.0)),
       decoration: const PageDecoration(
         pageColor: Colors.white,
@@ -25,7 +26,10 @@ PageViewModel introPages(String imgPath) => PageViewModel(
     );
 
 // App utills
-navigateTo({required BuildContext context, required String pagePath, Object? arguments}) {
+navigateTo(
+    {required BuildContext context,
+    required String pagePath,
+    Object? arguments}) {
   Navigator.pushNamed(context, pagePath, arguments: arguments);
 }
 
@@ -34,7 +38,7 @@ navigateAndReplace(BuildContext context, String pagePath) {
 }
 
 getAppStrings(BuildContext context) {
-  return AppLocalizations.of(context);
+  return S.of(context);
 }
 
 // App shared components
@@ -61,8 +65,8 @@ Widget defaultBtn({
                 : MaterialStateProperty.all<Color>(
                     AppColors.mainColor,
                   ),
-            shape: MaterialStateProperty.all(
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0))),
+            shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0))),
           ),
           child: Text(
             text,
@@ -107,12 +111,15 @@ Widget defaultTextField({
         return null;
       },
       onTap: onTap,
-      style: isDark ? const TextStyle(color: Colors.white) : const TextStyle(color: Colors.black),
+      style: isDark
+          ? const TextStyle(color: Colors.white)
+          : const TextStyle(color: Colors.black),
       decoration: InputDecoration(
           isDense: true,
           contentPadding: const EdgeInsets.all(12),
           hintText: text,
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), gapPadding: 1),
+          border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10), gapPadding: 1),
           prefixIcon: Icon(prefixIcon),
           suffixIcon: suffixIcon != null
               ? (IconButton(onPressed: onSuffixPressed, icon: Icon(suffixIcon)))
@@ -192,7 +199,9 @@ void showDoneModal(
                   const SizedBox(
                     height: 20,
                   ),
-                  Expanded(child: bigText(context: context, text: text, lines: 2, size: 16)),
+                  Expanded(
+                      child: bigText(
+                          context: context, text: text, lines: 2, size: 16)),
                   const SizedBox(
                     height: 30,
                   ),
@@ -233,14 +242,18 @@ AppBar myAppBar({
       ],
     );
 
-myGrid({required List<Product> products, required Map<int, bool> favProducts, int count = 0}) =>
+myGrid(
+        {required List<Product> products,
+        required Map<int, bool> favProducts,
+        int count = 0}) =>
     StaggeredGridView.countBuilder(
         crossAxisCount: 2,
         itemCount: count == 0 ? products.length : count,
         crossAxisSpacing: 8,
         mainAxisSpacing: 8,
         physics: const NeverScrollableScrollPhysics(),
-        itemBuilder: (context, index) => buildProductItem(context, products[index], favProducts),
+        itemBuilder: (context, index) =>
+            buildProductItem(context, products[index], favProducts),
         staggeredTileBuilder: (index) => const StaggeredTile.fit(1));
 
 Widget customIcon(BuildContext context, IconData icon) => Container(
@@ -325,13 +338,15 @@ buildBottomSheet(
                         onTap: () {},
                         prefixIcon: Icons.lock_outline),
                     isLogin
-                        ? clickableText(() {}, getAppStrings(context).forgot_password)
+                        ? clickableText(
+                            () {}, getAppStrings(context).forgot_password)
                         : Column(
                             children: [
                               if (confirmPasswordController != null)
                                 defaultTextField(
                                     context: context,
-                                    text: getAppStrings(context).confirm_password,
+                                    text:
+                                        getAppStrings(context).confirm_password,
                                     keyboardType: TextInputType.visiblePassword,
                                     controller: confirmPasswordController,
                                     onSubmitted: (value) {
@@ -347,7 +362,8 @@ buildBottomSheet(
                                   context: context,
                                   text: getAppStrings(context).enter_name,
                                   keyboardType: TextInputType.name,
-                                  controller: nameController ?? TextEditingController(),
+                                  controller:
+                                      nameController ?? TextEditingController(),
                                   onSubmitted: (value) {
                                     //submitLogin();
                                   },
@@ -361,7 +377,8 @@ buildBottomSheet(
                                   context: context,
                                   text: getAppStrings(context).enter_phone,
                                   keyboardType: TextInputType.phone,
-                                  controller: phoneController ?? TextEditingController(),
+                                  controller: phoneController ??
+                                      TextEditingController(),
                                   onSubmitted: (value) {
                                     //submitLogin();
                                   },
@@ -421,7 +438,8 @@ Widget buildCatsItem(Category category) => SizedBox(
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   color: Colors.white24,
-                  image: DecorationImage(fit: BoxFit.cover, image: imageProvider)),
+                  image:
+                      DecorationImage(fit: BoxFit.cover, image: imageProvider)),
             ),
             placeholder: (context, url) => Transform.scale(
               scale: 0.2,
@@ -439,11 +457,15 @@ Widget buildCatsItem(Category category) => SizedBox(
               width: double.infinity,
               decoration: BoxDecoration(
                 borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
+                    bottomLeft: Radius.circular(20),
+                    bottomRight: Radius.circular(20)),
                 color: Colors.black.withOpacity(0.4),
               ),
               child: smallText(
-                  text: category.name!, color: Colors.white, lines: 1, textAlign: TextAlign.center))
+                  text: category.name!,
+                  color: Colors.white,
+                  lines: 1,
+                  textAlign: TextAlign.center))
         ],
       ),
     );
@@ -464,10 +486,12 @@ Widget buildCatsItem(Category category) => SizedBox(
       ],
     ); */
 
-Widget buildProductItem(BuildContext context, Product product, Map<int, bool> favs) =>
+Widget buildProductItem(
+        BuildContext context, Product product, Map<int, bool> favs) =>
     GestureDetector(
       onTap: () {
-        navigateTo(context: context, pagePath: '/product_details', arguments: product);
+        navigateTo(
+            context: context, pagePath: '/product_details', arguments: product);
       },
       child: Container(
         margin: const EdgeInsets.all(3),
@@ -496,7 +520,8 @@ Widget buildProductItem(BuildContext context, Product product, Map<int, bool> fa
                     imageBuilder: (context, imageProvider) => DecoratedBox(
                       decoration: const BoxDecoration(
                         borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+                            topLeft: Radius.circular(10),
+                            topRight: Radius.circular(10)),
                       ),
                       child: SizedBox(
                         height: 180,
@@ -505,8 +530,10 @@ Widget buildProductItem(BuildContext context, Product product, Map<int, bool> fa
                           image: imageProvider,
                           progressIndicatorBuilder: (context, progress) {
                             double value = 0;
-                            if (progress != null && progress.expectedTotalBytes != null) {
-                              value = progress.cumulativeBytesLoaded / progress.expectedTotalBytes!;
+                            if (progress != null &&
+                                progress.expectedTotalBytes != null) {
+                              value = progress.cumulativeBytesLoaded /
+                                  progress.expectedTotalBytes!;
                             }
                             return CircularProgressIndicator(value: value);
                           },
@@ -539,10 +566,12 @@ Widget buildProductItem(BuildContext context, Product product, Map<int, bool> fa
                         },
                         child: Container(
                           padding: const EdgeInsets.all(2),
-                          decoration:
-                              const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                          decoration: const BoxDecoration(
+                              color: Colors.white, shape: BoxShape.circle),
                           child: Icon(
-                            favs[product.id!] ?? false ? Icons.favorite : Icons.favorite_border,
+                            favs[product.id!] ?? false
+                                ? Icons.favorite
+                                : Icons.favorite_border,
                             color: Colors.black,
                           ),
                         ),
@@ -569,7 +598,8 @@ Widget buildProductItem(BuildContext context, Product product, Map<int, bool> fa
               child: Row(
                 children: [
                   smallText(
-                      text: "${product.price!.toString()} ${getAppStrings(context).price_cur}",
+                      text:
+                          "${product.price!.toString()} ${getAppStrings(context).price_cur}",
                       color: isDark ? Colors.white : AppColors.mainBlackColor,
                       lines: 1,
                       fontWeight: FontWeight.bold),
@@ -613,7 +643,8 @@ buildOrderItem(BuildContext context, Product product) => LimitedBox(
                     height: 5,
                   ),
                   smallText(
-                      text: 'total price', color: isDark ? Colors.white : AppColors.mainBlackColor),
+                      text: 'total price',
+                      color: isDark ? Colors.white : AppColors.mainBlackColor),
                   const SizedBox(
                     height: 5,
                   ),
