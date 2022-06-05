@@ -38,5 +38,10 @@
     "logout":"Logout",
     "updated":"Updated Successfully",
     "description":"Description",
-    "add_to_cart":"Add to Cart"
+    "add_to_cart":"Add to Cart",
+    "subtotal":"Subtotal",
+    "total":"Total Amount",
+    "shipping":"Shipping",
+    "checkout":"Checkout",
+    "no_cart_items": "No Items in Cart"
 }
