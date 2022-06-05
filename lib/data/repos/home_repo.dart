@@ -60,10 +60,11 @@ class HomeRepo {
   }) async {
     List<CartItem> cartItems = [];
     await homeApi.getCartItems(lang: lang).then((value) {
-      //print(value.data);
-      cartItems.add(CartItem.fromJson(value.data));
+      cartItems = value.data!;
+      print('cartItems.length:: ');
+      print(cartItems.length);
+      //return cartItems;
     });
-
     return cartItems;
   }
 
@@ -79,5 +80,9 @@ class HomeRepo {
     required int id,
   }) async {
     return await homeApi.updateCartFav(lang: lang, id: id, isCart: true);
+  }
+
+  Future<void> updateQtyInCart({lang, required int id, required int qty}) async {
+    await homeApi.updateQtyInCart(lang: lang, productCartId: id, qty: qty);
   }
 }

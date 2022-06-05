@@ -89,7 +89,7 @@ class MyApp extends StatelessWidget {
             theme: appTheme(),
             darkTheme: appDarkTheme(),
             themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
-            //home: ProductDetailsPage(),
+            //home: const CartPage(),
           );
         });
   }

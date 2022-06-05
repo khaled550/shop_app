@@ -7,9 +7,12 @@ class CartModel {
   CartModel({this.status, this.data});
 
   CartModel.fromJson(Map<String, dynamic> json) {
+    data = [];
     status = json['status'];
     if (json['data']['cart_items'] != null) {
-      data!.add(CartItem.fromJson(json['data']['cart_items']));
+      json['data']['cart_items'].forEach((v) {
+        data!.add(CartItem.fromJson(v));
+      });
     }
   }
 }

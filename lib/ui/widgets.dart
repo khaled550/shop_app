@@ -17,8 +17,7 @@ import '../constants/colors.dart';
 // onboarding pages list
 PageViewModel introPages(String imgPath) => PageViewModel(
       title: "Title of first page",
-      body:
-          "Here you can write the description of the page, to explain someting...",
+      body: "Here you can write the description of the page, to explain someting...",
       image: Center(child: Image.asset(imgPath, height: 175.0)),
       decoration: const PageDecoration(
         pageColor: Colors.white,
@@ -26,10 +25,7 @@ PageViewModel introPages(String imgPath) => PageViewModel(
     );
 
 // App utills
-navigateTo(
-    {required BuildContext context,
-    required String pagePath,
-    Object? arguments}) {
+navigateTo({required BuildContext context, required String pagePath, Object? arguments}) {
   Navigator.pushNamed(context, pagePath, arguments: arguments);
 }
 
@@ -65,8 +61,8 @@ Widget defaultBtn({
                 : MaterialStateProperty.all<Color>(
                     AppColors.mainColor,
                   ),
-            shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0))),
+            shape: MaterialStateProperty.all(
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0))),
           ),
           child: Text(
             text,
@@ -111,15 +107,12 @@ Widget defaultTextField({
         return null;
       },
       onTap: onTap,
-      style: isDark
-          ? const TextStyle(color: Colors.white)
-          : const TextStyle(color: Colors.black),
+      style: isDark ? const TextStyle(color: Colors.white) : const TextStyle(color: Colors.black),
       decoration: InputDecoration(
           isDense: true,
           contentPadding: const EdgeInsets.all(12),
           hintText: text,
-          border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10), gapPadding: 1),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), gapPadding: 1),
           prefixIcon: Icon(prefixIcon),
           suffixIcon: suffixIcon != null
               ? (IconButton(onPressed: onSuffixPressed, icon: Icon(suffixIcon)))
@@ -149,7 +142,7 @@ Widget bigText(
             fontWeight: FontWeight.bold));
 
 Widget smallText(
-        {color = AppColors.mainGreyColor,
+        {Color? color,
         required text,
         double size = 16,
         double height = 1.2,
@@ -199,9 +192,7 @@ void showDoneModal(
                   const SizedBox(
                     height: 20,
                   ),
-                  Expanded(
-                      child: bigText(
-                          context: context, text: text, lines: 2, size: 16)),
+                  Expanded(child: bigText(context: context, text: text, lines: 2, size: 16)),
                   const SizedBox(
                     height: 30,
                   ),
@@ -223,37 +214,35 @@ void showDoneModal(
 
 AppBar myAppBar({
   required String tite,
-  required void Function()? onSearchPressed,
-  required void Function()? onCartPressed,
+  void Function()? onSearchPressed,
+  void Function()? onCartPressed,
 }) =>
     AppBar(
       centerTitle: false,
       //leading: IconButton(onPressed: (() {}), icon: const Icon(Icons.menu)),
       title: Text(tite),
       actions: [
-        IconButton(
-          onPressed: onSearchPressed,
-          icon: const Icon(LineIcons.search),
-        ),
-        IconButton(
-          onPressed: onCartPressed,
-          icon: const Icon(LineIcons.shoppingBag),
-        ),
+        if (onSearchPressed != null)
+          IconButton(
+            onPressed: onSearchPressed,
+            icon: const Icon(LineIcons.search),
+          ),
+        if (onCartPressed != null)
+          IconButton(
+            onPressed: onCartPressed,
+            icon: const Icon(LineIcons.shoppingBag),
+          ),
       ],
     );
 
-myGrid(
-        {required List<Product> products,
-        required Map<int, bool> favProducts,
-        int count = 0}) =>
+myGrid({required List<Product> products, required Map<int, bool> favProducts, int count = 0}) =>
     StaggeredGridView.countBuilder(
         crossAxisCount: 2,
         itemCount: count == 0 ? products.length : count,
         crossAxisSpacing: 8,
         mainAxisSpacing: 8,
         physics: const NeverScrollableScrollPhysics(),
-        itemBuilder: (context, index) =>
-            buildProductItem(context, products[index], favProducts),
+        itemBuilder: (context, index) => buildProductItem(context, products[index], favProducts),
         staggeredTileBuilder: (index) => const StaggeredTile.fit(1));
 
 Widget customIcon(BuildContext context, IconData icon) => Container(
@@ -338,15 +327,13 @@ buildBottomSheet(
                         onTap: () {},
                         prefixIcon: Icons.lock_outline),
                     isLogin
-                        ? clickableText(
-                            () {}, getAppStrings(context).forgot_password)
+                        ? clickableText(() {}, getAppStrings(context).forgot_password)
                         : Column(
                             children: [
                               if (confirmPasswordController != null)
                                 defaultTextField(
                                     context: context,
-                                    text:
-                                        getAppStrings(context).confirm_password,
+                                    text: getAppStrings(context).confirm_password,
                                     keyboardType: TextInputType.visiblePassword,
                                     controller: confirmPasswordController,
                                     onSubmitted: (value) {
@@ -362,8 +349,7 @@ buildBottomSheet(
                                   context: context,
                                   text: getAppStrings(context).enter_name,
                                   keyboardType: TextInputType.name,
-                                  controller:
-                                      nameController ?? TextEditingController(),
+                                  controller: nameController ?? TextEditingController(),
                                   onSubmitted: (value) {
                                     //submitLogin();
                                   },
@@ -377,8 +363,7 @@ buildBottomSheet(
                                   context: context,
                                   text: getAppStrings(context).enter_phone,
                                   keyboardType: TextInputType.phone,
-                                  controller: phoneController ??
-                                      TextEditingController(),
+                                  controller: phoneController ?? TextEditingController(),
                                   onSubmitted: (value) {
                                     //submitLogin();
                                   },
@@ -438,8 +423,7 @@ Widget buildCatsItem(Category category) => SizedBox(
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   color: Colors.white24,
-                  image:
-                      DecorationImage(fit: BoxFit.cover, image: imageProvider)),
+                  image: DecorationImage(fit: BoxFit.cover, image: imageProvider)),
             ),
             placeholder: (context, url) => Transform.scale(
               scale: 0.2,
@@ -457,15 +441,11 @@ Widget buildCatsItem(Category category) => SizedBox(
               width: double.infinity,
               decoration: BoxDecoration(
                 borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(20),
-                    bottomRight: Radius.circular(20)),
+                    bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
                 color: Colors.black.withOpacity(0.4),
               ),
               child: smallText(
-                  text: category.name!,
-                  color: Colors.white,
-                  lines: 1,
-                  textAlign: TextAlign.center))
+                  text: category.name!, color: Colors.white, lines: 1, textAlign: TextAlign.center))
         ],
       ),
     );
@@ -486,12 +466,10 @@ Widget buildCatsItem(Category category) => SizedBox(
       ],
     ); */
 
-Widget buildProductItem(
-        BuildContext context, Product product, Map<int, bool> favs) =>
+Widget buildProductItem(BuildContext context, Product product, Map<int, bool> favs) =>
     GestureDetector(
       onTap: () {
-        navigateTo(
-            context: context, pagePath: '/product_details', arguments: product);
+        navigateTo(context: context, pagePath: '/product_details', arguments: product);
       },
       child: Container(
         margin: const EdgeInsets.all(3),
@@ -520,8 +498,7 @@ Widget buildProductItem(
                     imageBuilder: (context, imageProvider) => DecoratedBox(
                       decoration: const BoxDecoration(
                         borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(10),
-                            topRight: Radius.circular(10)),
+                            topLeft: Radius.circular(10), topRight: Radius.circular(10)),
                       ),
                       child: SizedBox(
                         height: 180,
@@ -530,10 +507,8 @@ Widget buildProductItem(
                           image: imageProvider,
                           progressIndicatorBuilder: (context, progress) {
                             double value = 0;
-                            if (progress != null &&
-                                progress.expectedTotalBytes != null) {
-                              value = progress.cumulativeBytesLoaded /
-                                  progress.expectedTotalBytes!;
+                            if (progress != null && progress.expectedTotalBytes != null) {
+                              value = progress.cumulativeBytesLoaded / progress.expectedTotalBytes!;
                             }
                             return CircularProgressIndicator(value: value);
                           },
@@ -566,12 +541,10 @@ Widget buildProductItem(
                         },
                         child: Container(
                           padding: const EdgeInsets.all(2),
-                          decoration: const BoxDecoration(
-                              color: Colors.white, shape: BoxShape.circle),
+                          decoration:
+                              const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
                           child: Icon(
-                            favs[product.id!] ?? false
-                                ? Icons.favorite
-                                : Icons.favorite_border,
+                            favs[product.id!] ?? false ? Icons.favorite : Icons.favorite_border,
                             color: Colors.black,
                           ),
                         ),
@@ -595,28 +568,24 @@ Widget buildProductItem(
             ),
             Padding(
               padding: const EdgeInsets.all(5.0),
-              child: Row(
-                children: [
-                  smallText(
-                      text:
-                          "${product.price!.toString()} ${getAppStrings(context).price_cur}",
-                      color: isDark ? Colors.white : AppColors.mainBlackColor,
-                      lines: 1,
-                      fontWeight: FontWeight.bold),
-                ],
-              ),
+              child: smallText(
+                  text: "${product.price!.toString()} ${getAppStrings(context).price_cur}",
+                  color: isDark ? Colors.white : AppColors.mainBlackColor,
+                  lines: 1,
+                  fontWeight: FontWeight.bold),
             ),
             if (product.discount != 0)
               Padding(
                 padding: const EdgeInsets.all(5.0),
                 child: smallText(
-                    text: '${product.oldPrice!}',
-                    lines: 1,
-                    size: 14,
-                    color: Colors.grey,
-                    fontWeight: FontWeight.bold,
-                    textDecoration: TextDecoration.lineThrough),
-              )
+                  text: "${product.oldPrice.toString()} ${getAppStrings(context).price_cur}",
+                  lines: 1,
+                  size: 14,
+                  color: Colors.grey,
+                  fontWeight: FontWeight.bold,
+                  textDecoration: TextDecoration.lineThrough,
+                ),
+              ),
           ],
         ),
       ),
@@ -643,8 +612,7 @@ buildOrderItem(BuildContext context, Product product) => LimitedBox(
                     height: 5,
                   ),
                   smallText(
-                      text: 'total price',
-                      color: isDark ? Colors.white : AppColors.mainBlackColor),
+                      text: 'total price', color: isDark ? Colors.white : AppColors.mainBlackColor),
                   const SizedBox(
                     height: 5,
                   ),

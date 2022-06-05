@@ -2,9 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:octo_image/octo_image.dart';
+import 'package:shop_app/cubit/home_cubit/home_page_state.dart';
 import '../../constants/colors.dart';
 import '../../cubit/home_cubit/home_page_cubit.dart';
-import '../../cubit/home_cubit/home_page_state.dart';
 import '../../data/model/product_model.dart';
 import '../widgets.dart';
 
@@ -18,12 +18,7 @@ class ProductDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     cubit = HomePageCubit.get(context);
-    return BlocConsumer<HomePageCubit, HomeLayoutState>(
-      listener: (context, state) {},
-      builder: (context, state) {
-        return _buildProductPage2(context);
-      },
-    );
+    return _buildProductPage2(context);
   }
 
   Widget _buildProductPage2(BuildContext context) => Scaffold(
@@ -51,25 +46,21 @@ class ProductDetailsPage extends StatelessWidget {
         background: appBarBackground(),
       ));
 
-  Widget appBarBackground() => Hero(
-        tag: product.id!,
-        child: CachedNetworkImage(
-          imageUrl: product.image!,
-          imageBuilder: (context, imageProvider) => OctoImage(
-            fit: BoxFit.cover,
-            image: imageProvider,
-            progressIndicatorBuilder: (context, progress) {
-              double value = 0;
-              if (progress != null && progress.expectedTotalBytes != null) {
-                value = progress.cumulativeBytesLoaded /
-                    progress.expectedTotalBytes!;
-              }
-              return CircularProgressIndicator(value: value);
-            },
-            errorBuilder: (context, error, stack) => const Icon(
-              Icons.error,
-              //color: Theme.of(context).textTheme.bodyText1!.color,
-            ),
+  Widget appBarBackground() => CachedNetworkImage(
+        imageUrl: product.image!,
+        imageBuilder: (context, imageProvider) => OctoImage(
+          fit: BoxFit.cover,
+          image: imageProvider,
+          progressIndicatorBuilder: (context, progress) {
+            double value = 0;
+            if (progress != null && progress.expectedTotalBytes != null) {
+              value = progress.cumulativeBytesLoaded / progress.expectedTotalBytes!;
+            }
+            return CircularProgressIndicator(value: value);
+          },
+          errorBuilder: (context, error, stack) => const Icon(
+            Icons.error,
+            //color: Theme.of(context).textTheme.bodyText1!.color,
           ),
         ),
       );
@@ -114,8 +105,8 @@ class ProductDetailsPage extends StatelessWidget {
         width: double.maxFinite,
         padding: const EdgeInsets.symmetric(horizontal: 8),
         decoration: const BoxDecoration(
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+            borderRadius:
+                BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
             color: AppColors.mainColor),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -125,8 +116,7 @@ class ProductDetailsPage extends StatelessWidget {
                 width: 5,
               ),
               smallText(
-                  text:
-                      "${product.price!.toString()} ${getAppStrings(context).price_cur}",
+                  text: "${product.price!.toString()} ${getAppStrings(context).price_cur}",
                   lines: 1,
                   color: Colors.white,
                   fontWeight: FontWeight.bold),
@@ -146,20 +136,18 @@ class ProductDetailsPage extends StatelessWidget {
                 ),
               Positioned(
                 right: 0,
-                child: ElevatedButton(
-                  style: ButtonStyle(
-                      elevation: MaterialStateProperty.all<double>(0),
-                      backgroundColor: MaterialStateProperty.all<Color>(
-                        AppColors.mainBlackColor,
-                      )),
-                  onPressed: () {
-                    cubit!.updateItemInCart(context: context, productId: 1);
+                child: BlocBuilder<HomePageCubit, HomeLayoutState>(
+                  builder: (context, state) {
+                    if (state is AddToCartDataSucState) {
+                      return checkInCart(context);
+                    } else if (state is UpdateCartDataLoadingState) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else {
+                      return checkInCart(context);
+                    }
                   },
-                  child: bigText(
-                      text: getAppStrings(context).add_to_cart,
-                      context: context,
-                      size: 12,
-                      color: Colors.white),
                 ),
               )
             ],
@@ -168,11 +156,50 @@ class ProductDetailsPage extends StatelessWidget {
       );
 
   Widget _buildDescriptionText() => SingleChildScrollView(
-      child: smallText(text: product.description!, size: 12));
+          child: smallText(
+        text: product.description!,
+        size: 14,
+        color: Colors.white,
+      ));
+
+  Widget checkInCart(BuildContext context) {
+    bool inCart = cubit!.inCartMap[product.id!] ?? false;
+    if (!inCart) {
+      return _buildAddCartBtn(
+        context,
+        getAppStrings(context).add_to_cart,
+      );
+    } else {
+      return _buildAddCartBtn(
+        context,
+        'Remove',
+      );
+    }
+  }
+
+  Widget _buildAddCartBtn(BuildContext context, String text) => ElevatedButton(
+        style: ButtonStyle(
+            elevation: MaterialStateProperty.all<double>(0),
+            backgroundColor: MaterialStateProperty.all<Color>(
+              AppColors.mainBlackColor,
+            )),
+        onPressed: () {
+          cubit!.updateItemInCart(
+            context: context,
+            productId: product.id!,
+          );
+        },
+        child: bigText(
+          text: text,
+          context: context,
+          size: 12,
+          color: Colors.white,
+        ),
+      );
 
   //************************************************/
 
-  Widget _buildProductPage(BuildContext context) {
+  /* Widget _buildProductPage(BuildContext context) {
     //final arguments = (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map;
     //product = arguments['product'];
     return SafeArea(
@@ -190,8 +217,7 @@ class ProductDetailsPage extends StatelessWidget {
                     height: 300,
                     decoration: BoxDecoration(
                         image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: NetworkImage(product.image!))),
+                            fit: BoxFit.cover, image: NetworkImage(product.image!))),
                   )),
               Positioned(
                 left: 20,
@@ -226,8 +252,7 @@ class ProductDetailsPage extends StatelessWidget {
                               padding: const EdgeInsets.all(16),
                               decoration: const BoxDecoration(
                                   borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(20),
-                                      topRight: Radius.circular(20)),
+                                      topLeft: Radius.circular(20), topRight: Radius.circular(20)),
                                   color: AppColors.mainBlackColor),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -274,27 +299,21 @@ class ProductDetailsPage extends StatelessWidget {
                                                 size: 14,
                                                 color: Colors.grey,
                                                 fontWeight: FontWeight.bold,
-                                                textDecoration:
-                                                    TextDecoration.lineThrough),
+                                                textDecoration: TextDecoration.lineThrough),
                                           Positioned(
                                             right: 0,
                                             child: ElevatedButton(
                                               style: ButtonStyle(
-                                                  elevation:
-                                                      MaterialStateProperty.all<
-                                                          double>(0),
-                                                  backgroundColor:
-                                                      MaterialStateProperty.all<
-                                                          Color>(
+                                                  elevation: MaterialStateProperty.all<double>(0),
+                                                  backgroundColor: MaterialStateProperty.all<Color>(
                                                     AppColors.mainBlackColor,
                                                   )),
                                               onPressed: () {
                                                 cubit!.updateItemInCart(
-                                                    context: context,
-                                                    productId: 1);
+                                                    context: context, productId: 1);
                                               },
                                               child: bigText(
-                                                  text: "Add to Cart",
+                                                  text: getAppStrings(context).add_to_cart,
                                                   context: context,
                                                   size: 12,
                                                   color: Colors.white),
@@ -308,16 +327,19 @@ class ProductDetailsPage extends StatelessWidget {
                                     height: 5,
                                   ),
                                   smallText(
-                                      text: 'Description',
+                                      text: getAppStrings(context).description,
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold),
                                   const SizedBox(
                                     height: 5,
                                   ),
                                   SingleChildScrollView(
-                                      child: smallText(
-                                          text: product.description!,
-                                          size: 12)),
+                                    child: smallText(
+                                      text: product.description!,
+                                      color: Colors.white,
+                                      size: 12,
+                                    ),
+                                  ),
                                 ],
                               )),
                         ),
@@ -329,5 +351,5 @@ class ProductDetailsPage extends StatelessWidget {
         ),
       ),
     );
-  }
+  } */
 }

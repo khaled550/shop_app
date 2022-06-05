@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../data/model/cart_model.dart';
 import '../../data/model/category_model.dart';
 import '../../data/model/home_model.dart';
 import '../../data/model/product_model.dart';
@@ -95,6 +96,7 @@ class HomePageCubit extends Cubit<HomeLayoutState> {
           element.id!: element.inCart!,
         });
       }
+      print('inCartMap: $inCartMap');
       loadProfileData(context);
     }).onError((error, stackTrace) {
       print(error);
@@ -164,21 +166,17 @@ class HomePageCubit extends Cubit<HomeLayoutState> {
     required int productId,
   }) {
     emit(UpdateCartDataLoadingState());
-    repo
-        .updateCart(
-      lang: getAppStrings(context),
-      id: productId,
-    )
-        .then((value) {
-      print(isFavouriteMap);
+    repo.updateCart(lang: getAppStrings(context).language, id: productId).then((value) {
       if (value) {
         inCartMap[productId] = !inCartMap[productId]!;
-        //emit(UpdateCartDataSucState());
+        //emit(AddToCartDataSucState());
+        getCartItems(context: context);
       } else {
         emit(UpdateCartDataFailedState('try again'));
       }
       return value;
     }).onError((error, stackTrace) {
+      print('error cart load: $error');
       emit(UpdateCartDataFailedState(error.toString()));
       return false;
     });
@@ -200,14 +198,80 @@ class HomePageCubit extends Cubit<HomeLayoutState> {
 
   //Cart page
   //List<CartItem>
+  double subtotalCart = 0.0;
+  //double totalCart = 0.0;
+  Map<int, int> itemsQtyMap = {};
+
   void getCartItems({
     required BuildContext context,
   }) {
     emit(UpdateCartDataLoadingState());
     repo.getCartItems(lang: getAppStrings(context).language).then(
       (cartItems) {
-        emit(UpdateCartDataSucState(cartItems));
+        for (var element in cartItems) {
+          itemsQtyMap[element.id!] = element.quantity!;
+          /* itemsQtyMap.addAll({
+          element.id!: element.!,
+        }); */
+        }
+        calculateCart(context: context, cartItems: cartItems);
       },
     );
+  }
+
+  void calculateCart({
+    required BuildContext context,
+    required List<CartItem> cartItems,
+  }) {
+    subtotalCart = 0.0;
+    for (var item in cartItems) {
+      subtotalCart += item.product!.price! * item.quantity!;
+    }
+    //totalCart = subtotalCart + 50; //shipping
+    emit(UpdateCartDataSucState(cartItems, subtotalCart));
+  }
+
+  //Items qty
+
+  void updateQtyInCart({
+    required BuildContext context,
+    required int productCartId,
+    required double productPrice,
+    required bool isIncrement,
+  }) {
+    //emit(UpdateCartDataLoadingState());
+    int qty = 0;
+    if (isIncrement && itemsQtyMap[productCartId]! < 5) {
+      qty = 1;
+      subtotalCart = subtotalCart + productPrice;
+    } else if (!isIncrement && itemsQtyMap[productCartId]! > 1) {
+      qty = -1;
+      subtotalCart = subtotalCart - productPrice;
+    } else {
+      return;
+    }
+
+    repo
+        .updateQtyInCart(
+      lang: getAppStrings(context).language,
+      id: productCartId,
+      qty: itemsQtyMap[productCartId]! + qty,
+    )
+        .then((value) {
+      itemsQtyMap[productCartId] = itemsQtyMap[productCartId]! + qty;
+      emit(UpdateItemQty(itemsQtyMap[productCartId]!));
+    });
+    /* .then((value) {
+      if (_) {
+        getCartItems(context: context);
+      } else {
+        emit(UpdateCartDataFailedState('try again'));
+      }
+      return value;
+    }).onError((error, stackTrace) {
+      print('error cart load: $error');
+      emit(UpdateCartDataFailedState(error.toString()));
+      return false;
+    }); */
   }
 }

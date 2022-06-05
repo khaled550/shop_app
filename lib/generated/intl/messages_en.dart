@@ -27,6 +27,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "add_to_cart": MessageLookupByLibrary.simpleMessage("Add to Cart"),
         "app_title": MessageLookupByLibrary.simpleMessage("My Shop"),
         "best_selling": MessageLookupByLibrary.simpleMessage("Best Selling"),
+        "checkout": MessageLookupByLibrary.simpleMessage("Checkout"),
         "confirm_password":
             MessageLookupByLibrary.simpleMessage("Confirm password"),
         "dark_mode": MessageLookupByLibrary.simpleMessage("Dark Mode"),
@@ -63,10 +64,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "my_lang": MessageLookupByLibrary.simpleMessage("Language"),
         "no_account":
             MessageLookupByLibrary.simpleMessage("Don\'t have an account yet?"),
+        "no_cart_items":
+            MessageLookupByLibrary.simpleMessage("No Items in Cart"),
         "price_cur": MessageLookupByLibrary.simpleMessage("EGP"),
         "search_text_field":
             MessageLookupByLibrary.simpleMessage("Search Anything..."),
         "settings": MessageLookupByLibrary.simpleMessage("Settings"),
+        "shipping": MessageLookupByLibrary.simpleMessage("Shipping"),
         "signup": MessageLookupByLibrary.simpleMessage("Signup"),
         "signup_title": MessageLookupByLibrary.simpleMessage("Signup"),
         "signup_via_email":
@@ -75,6 +79,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Signup with Facebook"),
         "signup_via_google":
             MessageLookupByLibrary.simpleMessage("Signup with Google"),
+        "subtotal": MessageLookupByLibrary.simpleMessage("Subtotal"),
+        "total": MessageLookupByLibrary.simpleMessage("Total Amount"),
         "updated": MessageLookupByLibrary.simpleMessage("Updated Successfully"),
         "view_all": MessageLookupByLibrary.simpleMessage("view all")
       };

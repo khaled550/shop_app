@@ -26,6 +26,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "add_to_cart": MessageLookupByLibrary.simpleMessage("اضف الى العربة"),
         "app_title": MessageLookupByLibrary.simpleMessage("متجري"),
         "best_selling": MessageLookupByLibrary.simpleMessage("الافضل مبيعا"),
+        "checkout": MessageLookupByLibrary.simpleMessage("الدفع"),
         "confirm_password":
             MessageLookupByLibrary.simpleMessage("تأكيد كلمة السر"),
         "dark_mode": MessageLookupByLibrary.simpleMessage("الوضع الليلي"),
@@ -60,9 +61,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "logout": MessageLookupByLibrary.simpleMessage("تسجيل الخروج"),
         "my_lang": MessageLookupByLibrary.simpleMessage("اللغة"),
         "no_account": MessageLookupByLibrary.simpleMessage("ليس لديك حساب؟"),
+        "no_cart_items":
+            MessageLookupByLibrary.simpleMessage("لا يوجد منتجات في العربة"),
         "price_cur": MessageLookupByLibrary.simpleMessage("ج.م"),
         "search_text_field": MessageLookupByLibrary.simpleMessage("البحث"),
         "settings": MessageLookupByLibrary.simpleMessage("الاعدادت"),
+        "shipping": MessageLookupByLibrary.simpleMessage("الشحن"),
         "signup": MessageLookupByLibrary.simpleMessage("تسجيل جديد"),
         "signup_title": MessageLookupByLibrary.simpleMessage("تسجيل"),
         "signup_via_email": MessageLookupByLibrary.simpleMessage(
@@ -71,6 +75,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("تسجيل باستخدام حساب فيسبوك"),
         "signup_via_google":
             MessageLookupByLibrary.simpleMessage("تسجيل باستخدام حساب جوجل"),
+        "subtotal": MessageLookupByLibrary.simpleMessage("المجموع الفرعي"),
+        "total": MessageLookupByLibrary.simpleMessage("المجموع الكلي"),
         "updated": MessageLookupByLibrary.simpleMessage("تم التعديل بنجاح"),
         "view_all": MessageLookupByLibrary.simpleMessage("اظهار الكل")
       };

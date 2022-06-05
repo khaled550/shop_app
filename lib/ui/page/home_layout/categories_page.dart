@@ -24,11 +24,11 @@ class CategoriesPage extends StatelessWidget {
         child: NestedScrollView(
             physics: const NeverScrollableScrollPhysics(),
             headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) => [
-                  myAppBar(
+                  /* myAppBar(
                     tite: getAppStrings(context).gn_cat,
                     onSearchPressed: () {},
                     onCartPressed: () {},
-                  )
+                  ) */
                 ],
             body: Row(
               mainAxisAlignment: MainAxisAlignment.start,

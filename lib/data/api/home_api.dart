@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:shop_app/data/model/cart_model.dart';
 import '../model/category_model.dart';
 import '../model/home_model.dart';
 import '../model/product_model.dart';
@@ -54,14 +55,22 @@ class HomeApi {
     return productModel;
   }
 
-  Future<Response<dynamic>> getCartItems({
+  Future<CartModel> getCartItems({
     required String lang,
   }) async {
-    return await DioHelper.getData(
+    CartModel? cartModel = CartModel();
+    await DioHelper.getData(
       url: CART_DATA,
       lang: lang,
       token: USER_TOKEN,
-    );
+    ).then((value) {
+      cartModel = CartModel.fromJson(value.data);
+      return cartModel!;
+    }).onError((error, stackTrace) {
+      print('CartModel loading: ${error.toString()}');
+      return cartModel!;
+    });
+    return cartModel!;
   }
 
   Future<bool> updateCartFav({
@@ -85,6 +94,25 @@ class HomeApi {
       print(error.toString());
     });
     return status;
+  }
+
+  Future<void> updateQtyInCart({
+    lang,
+    required int productCartId,
+    required int qty,
+  }) async {
+    await DioHelper.putData(
+      lang: lang,
+      url: CART_DATA + '/$productCartId',
+      data: {
+        'quantity': qty,
+      },
+      token: USER_TOKEN,
+    ).then((value) {
+      print('updateQtyInCart: $value');
+    }).onError((error, stackTrace) {
+      print(error.toString());
+    });
   }
 
   Future<Response> getProfileData({

@@ -26,22 +26,20 @@ class LoginSignupPage extends StatelessWidget {
           }
           if (state is LoginSuccessState) {
             if (state.loginModel.status!) {
-              SharedPref.putData(
-                  key: 'token', value: state.loginModel.data!.token);
+              SharedPref.putData(key: 'token', value: state.loginModel.data!.token);
               SharedPref.putData(key: LOGIN_SHARED, value: true).then((value) {
                 if (value) {
                   showDoneModal(
-                      context: context,
-                      text: state.loginModel.message!,
-                      iconData: Icons.done_outlined,
-                      pagePath: HOME_PAGE_PATH);
+                    context: context,
+                    text: state.loginModel.message!,
+                    iconData: Icons.done_outlined,
+                    pagePath: HOME_PAGE_PATH,
+                  );
                 }
               });
             } else {
               showDoneModal(
-                  context: context,
-                  text: state.loginModel.message!,
-                  iconData: Icons.error_outline);
+                  context: context, text: state.loginModel.message!, iconData: Icons.error_outline);
             }
           } else {}
         },
@@ -59,8 +57,7 @@ class LoginSignupPage extends StatelessWidget {
   Widget buildLoginUI(BuildContext context) {
     LoginCubit cubit = LoginCubit.get(context);
     return Padding(
-      padding: const EdgeInsetsDirectional.only(
-          top: 16, bottom: 30, start: 16, end: 16),
+      padding: const EdgeInsetsDirectional.only(top: 16, bottom: 30, start: 16, end: 16),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

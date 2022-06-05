@@ -36,16 +36,16 @@ class Product {
   bool? inCart;
 
   Product(
-      {id,
-      price,
-      oldPrice,
-      discount,
-      image,
-      name,
-      description,
-      images,
-      inFavorites,
-      inCart});
+      {this.id,
+      this.price,
+      this.oldPrice,
+      this.discount,
+      this.image,
+      this.name,
+      this.description,
+      this.images,
+      this.inFavorites,
+      this.inCart});
 
   Product.fromJson(Map<String, dynamic> json) {
     id = json['id'];

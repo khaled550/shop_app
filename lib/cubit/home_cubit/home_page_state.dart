@@ -76,13 +76,23 @@ class UpdateCartDataLoadingState extends HomeLayoutState {
 
 class UpdateCartDataSucState extends HomeLayoutState {
   final List<CartItem> cartItems;
-  UpdateCartDataSucState(this.cartItems);
+  final double subtotalCart;
+  UpdateCartDataSucState(this.cartItems, this.subtotalCart);
 }
 
 class UpdateCartDataFailedState extends HomeLayoutState {
   final String error;
 
   UpdateCartDataFailedState(this.error);
+}
+
+class AddToCartDataSucState extends HomeLayoutState {
+  AddToCartDataSucState();
+}
+
+class UpdateItemQty extends HomeLayoutState {
+  final int quantity;
+  UpdateItemQty(this.quantity);
 }
 
 class UpdateSearchedListState extends HomeLayoutState {
