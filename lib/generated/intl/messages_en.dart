@@ -24,9 +24,18 @@ class MessageLookup extends MessageLookupByLibrary {
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "account_settings":
             MessageLookupByLibrary.simpleMessage("Your Account"),
+        "add": MessageLookupByLibrary.simpleMessage("add"),
+        "add_address_title":
+            MessageLookupByLibrary.simpleMessage("Add Address"),
         "add_to_cart": MessageLookupByLibrary.simpleMessage("Add to Cart"),
+        "address_city": MessageLookupByLibrary.simpleMessage("City"),
+        "address_details":
+            MessageLookupByLibrary.simpleMessage("Address details"),
+        "address_notes": MessageLookupByLibrary.simpleMessage("Notes"),
         "app_title": MessageLookupByLibrary.simpleMessage("My Shop"),
         "best_selling": MessageLookupByLibrary.simpleMessage("Best Selling"),
+        "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+        "cart_page_title": MessageLookupByLibrary.simpleMessage("Cart"),
         "checkout": MessageLookupByLibrary.simpleMessage("Checkout"),
         "confirm_password":
             MessageLookupByLibrary.simpleMessage("Confirm password"),
@@ -61,6 +70,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "login_via_google":
             MessageLookupByLibrary.simpleMessage("Login with Google"),
         "logout": MessageLookupByLibrary.simpleMessage("Logout"),
+        "logout_msg":
+            MessageLookupByLibrary.simpleMessage("Would you like to logout ?!"),
         "my_lang": MessageLookupByLibrary.simpleMessage("Language"),
         "no_account":
             MessageLookupByLibrary.simpleMessage("Don\'t have an account yet?"),
@@ -82,6 +93,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "subtotal": MessageLookupByLibrary.simpleMessage("Subtotal"),
         "total": MessageLookupByLibrary.simpleMessage("Total Amount"),
         "updated": MessageLookupByLibrary.simpleMessage("Updated Successfully"),
+        "user_addresses_title":
+            MessageLookupByLibrary.simpleMessage("Addresses"),
         "view_all": MessageLookupByLibrary.simpleMessage("view all")
       };
 }

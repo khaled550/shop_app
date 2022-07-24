@@ -87,7 +87,7 @@ class LoginSignupPage extends StatelessWidget {
                   ? defaultBtn(
                       context: context,
                       onPressed: () {
-                        buildBottomSheet(
+                        buildAuthBottomSheet(
                             context: context,
                             title: cubit.isLogin
                                 ? getAppStrings(context).login_via_email
@@ -112,7 +112,7 @@ class LoginSignupPage extends StatelessWidget {
                   : defaultBtn(
                       context: context,
                       onPressed: () {
-                        buildBottomSheet(
+                        buildAuthBottomSheet(
                             context: context,
                             title: getAppStrings(context).signup_via_email,
                             emailController: cubit.emailController,

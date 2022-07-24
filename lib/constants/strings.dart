@@ -12,6 +12,8 @@ const String ADD_FAV = '/api/favorites';
 const String PROFILE_DATA = '/api/profile';
 const String UPDATE_PROFILE_DATA = '/api/update-profile';
 const String CART_DATA = '/api/carts';
+const String ORDERS_DATA = '/api/orders';
+const String ADDRESS_DATA = '/api/addresses';
 
 //Page paths
 const String HOME_PAGE_PATH = '/home';
@@ -19,6 +21,8 @@ const String LOGIN_PAGE_PATH = '/';
 const String SEARCH_PAGE_PATH = '/search';
 const String PRODUCT_PAGE_PATH = '/product_details';
 const String CART_PAGE_PATH = '/cart_page';
+const String ADDRESS_PAGE_PATH = '/address_page';
+const String ADD_ADDRESS_PAGE_PATH = '/address_add';
 
 //CONSTANTS
 const String ON_BOARDING_SHARED = 'on_boarding_done';

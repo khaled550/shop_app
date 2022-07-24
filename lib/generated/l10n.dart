@@ -499,6 +499,96 @@ class S {
       args: [],
     );
   }
+
+  /// `Cart`
+  String get cart_page_title {
+    return Intl.message(
+      'Cart',
+      name: 'cart_page_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Addresses`
+  String get user_addresses_title {
+    return Intl.message(
+      'Addresses',
+      name: 'user_addresses_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add Address`
+  String get add_address_title {
+    return Intl.message(
+      'Add Address',
+      name: 'add_address_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Address details`
+  String get address_details {
+    return Intl.message(
+      'Address details',
+      name: 'address_details',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `City`
+  String get address_city {
+    return Intl.message(
+      'City',
+      name: 'address_city',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Notes`
+  String get address_notes {
+    return Intl.message(
+      'Notes',
+      name: 'address_notes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `add`
+  String get add {
+    return Intl.message(
+      'add',
+      name: 'add',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Would you like to logout ?!`
+  String get logout_msg {
+    return Intl.message(
+      'Would you like to logout ?!',
+      name: 'logout_msg',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cancel`
+  String get cancel {
+    return Intl.message(
+      'Cancel',
+      name: 'cancel',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

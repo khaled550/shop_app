@@ -68,7 +68,7 @@ class ProductDetailsPage extends StatelessWidget {
   Widget _buildSliverList(BuildContext context) => SliverList(
         delegate: SliverChildListDelegate([
           Container(
-            height: MediaQuery.of(context).size.height - 90,
+            //height: MediaQuery.of(context).size.height - 90,
             //width: double.maxFinite,
             padding: const EdgeInsets.all(8),
             decoration: const BoxDecoration(
@@ -142,7 +142,9 @@ class ProductDetailsPage extends StatelessWidget {
                       return checkInCart(context);
                     } else if (state is UpdateCartDataLoadingState) {
                       return const Center(
-                        child: CircularProgressIndicator(),
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                        ),
                       );
                     } else {
                       return checkInCart(context);

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shop_app/data/model/address_model.dart';
 import '../../data/model/cart_model.dart';
 import '../../data/model/category_model.dart';
 import '../../data/model/home_model.dart';
@@ -135,6 +136,7 @@ class HomePageCubit extends Cubit<HomeLayoutState> {
       nameController.text = userProfile.name!;
       phoneController.text = userProfile.phone!;
       passwordController.text = '123456';
+      getOrders(context);
       isLoaded = true;
       emit(HomePageSucState());
     }).onError((error, stackTrace) {
@@ -181,19 +183,6 @@ class HomePageCubit extends Cubit<HomeLayoutState> {
       return false;
     });
     return false;
-  }
-
-  //Search Page
-  List<Product> searchedProducts = [];
-  void updateSearchList(String productName) {
-    if (productName.isNotEmpty && productModel != null) {
-      searchedProducts = productModel!.products!
-          .where((product) => product.name!.toLowerCase().startsWith(productName))
-          .toList();
-    } else {
-      searchedProducts = [];
-    }
-    emit(UpdateSearchedListState(searchedProducts));
   }
 
   //Cart page
@@ -273,5 +262,54 @@ class HomePageCubit extends Cubit<HomeLayoutState> {
       emit(UpdateCartDataFailedState(error.toString()));
       return false;
     }); */
+  }
+
+  //Search Page
+  List<Product> searchedProducts = [];
+  void updateSearchList(String productName) {
+    if (productName.isNotEmpty && productModel != null) {
+      searchedProducts = productModel!.products!
+          .where((product) => product.name!.toLowerCase().startsWith(productName))
+          .toList();
+    } else {
+      searchedProducts = [];
+    }
+    emit(UpdateSearchedListState(searchedProducts));
+  }
+
+  //Orders Page
+  void getOrders(BuildContext context) {
+    repo.getOrders(lang: getAppStrings(context).language).then((ordersList) {
+      print('${ordersList.length} orders');
+      emit(LoadingOrdersSucState(ordersList));
+    });
+  }
+
+  //Address Page
+  void getAddresses({
+    required BuildContext context,
+  }) {
+    emit(LoadingAdressesState());
+    repo.getAddresses(lang: getAppStrings(context).language).then((ordersList) {
+      emit(LoadingAdressesSucState(ordersList));
+    }).onError((error, stackTrace) {
+      print('error getAddresses: $error');
+      emit(LoadingAdressesFailedState(error.toString()));
+    });
+  }
+
+  Future<void> addAddress({
+    required BuildContext context,
+    required Address address,
+  }) async {
+    emit(AddAdressLoadingState());
+    return repo
+        .addNewAddress(
+      lang: getAppStrings(context).language,
+      address: address,
+    )
+        .whenComplete(() {
+      emit(AddAdressesSucState());
+    });
   }
 }

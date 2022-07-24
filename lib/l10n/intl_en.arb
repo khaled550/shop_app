@@ -43,5 +43,14 @@
     "total":"Total Amount",
     "shipping":"Shipping",
     "checkout":"Checkout",
-    "no_cart_items": "No Items in Cart"
+    "no_cart_items": "No Items in Cart",
+    "cart_page_title": "Cart",
+    "user_addresses_title": "Addresses",
+    "add_address_title": "Add Address",
+    "address_details": "Address details",
+    "address_city": "City",
+    "address_notes": "Notes",
+    "add": "add",
+    "logout_msg": "Would you like to logout ?!",
+    "cancel": "Cancel"
 }

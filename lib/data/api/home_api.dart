@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:shop_app/data/model/address_model.dart';
 import 'package:shop_app/data/model/cart_model.dart';
 import '../model/category_model.dart';
 import '../model/home_model.dart';
@@ -148,6 +149,66 @@ class HomeApi {
     });
     return userModel; */
   }
+
+  Future<Response> fetchOrdersData({
+    required String lang,
+  }) async {
+    //UserModel userModel = UserModel();
+    return await DioHelper.getData(
+      url: ORDERS_DATA,
+      lang: lang,
+      token: USER_TOKEN,
+    ).then((value) {
+      print(value.data);
+      return value;
+    });
+    /* .then((value) {
+      userModel = UserModel.fromJson(value.data['data']);
+      print(value.data);
+      print('User getProfileData: ${userModel.email}');
+      SharedPref.putData(key: 'token', value: userModel.token).whenComplete(() {
+        print('User getProfileData: ${userModel.token} saved');
+      });
+    }).onError((error, stackTrace) {
+      print(error.toString());
+    });
+    return userModel; */
+  }
+
+  Future<Response> fetchAddressesData({
+    required String lang,
+  }) async {
+    return await DioHelper.getData(
+      url: ADDRESS_DATA,
+      lang: lang,
+      token: USER_TOKEN,
+    ).then((value) {
+      print(value.data);
+      return value;
+    });
+  }
+
+  Future<Response> addNewAddress({required String lang, required Address address}) async {
+    return await DioHelper.postData(
+      url: ADDRESS_DATA,
+      lang: lang,
+      token: USER_TOKEN,
+      data: {
+        'name': address.name,
+        'city': address.city,
+        'region': address.city,
+        'details': address.details,
+        'notes': address.name,
+        'latitude': 30.0616863,
+        'longitude': 30.0616863,
+      },
+    ).then((value) {
+      print(value.data);
+      return value;
+    });
+  }
+
+  //**************************************************** */
 
   Map<String, dynamic> myHomeData = {
     "status": true,

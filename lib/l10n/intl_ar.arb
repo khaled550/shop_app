@@ -43,5 +43,14 @@
     "total":"المجموع الكلي",
     "shipping":"الشحن",
     "checkout":"الدفع",
-    "no_cart_items": "لا يوجد منتجات في العربة"
+    "no_cart_items": "لا يوجد منتجات في عربة التسوق",
+    "cart_page_title": "عربة التسوق",
+    "user_addresses_title": "العناوين",
+    "add_address_title": "اضافة عنوان",
+    "address_details": "تفاصيل العنوان",
+    "address_city": "المدينة",
+    "address_notes": "ملاحظات",
+    "add": "اضافة",
+    "logout_msg": "هل تود تسجيل الخروج ؟",
+    "cancel": "الغاء"
 }

@@ -30,12 +30,6 @@ void main() async {
   await SharedPref.init();
   BlocOverrides.runZoned(
     () {
-      //WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-      //FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-      //initialization();
-
-      bool isDark = SharedPref.getData(key: APP_THEME) ?? false;
-      print('USER_TOKEN: $USER_TOKEN');
       /* runApp(DevicePreview(
           builder: (context) => MyApp(
                 isDark: isDark,
@@ -89,7 +83,7 @@ class MyApp extends StatelessWidget {
             theme: appTheme(),
             darkTheme: appDarkTheme(),
             themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
-            //home: const CartPage(),
+            //home: const UserAddressesPage(),
           );
         });
   }

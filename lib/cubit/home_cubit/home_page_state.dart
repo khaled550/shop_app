@@ -1,4 +1,6 @@
+import 'package:shop_app/data/model/address_model.dart';
 import 'package:shop_app/data/model/cart_model.dart';
+import 'package:shop_app/data/model/order_model.dart';
 
 import '../../data/model/product_model.dart';
 
@@ -99,4 +101,50 @@ class UpdateSearchedListState extends HomeLayoutState {
   final List<Product> searchedProducts;
 
   UpdateSearchedListState(this.searchedProducts);
+}
+
+class LoadingOrdersSucState extends HomeLayoutState {
+  final List<Order> ordersList;
+
+  LoadingOrdersSucState(this.ordersList);
+}
+
+class LoadingOrdersState extends HomeLayoutState {
+  LoadingOrdersState();
+}
+
+class LoadingOrdersFailedState extends HomeLayoutState {
+  final String error;
+
+  LoadingOrdersFailedState(this.error);
+}
+
+class LoadingAdressesSucState extends HomeLayoutState {
+  final List<Address> adressesList;
+
+  LoadingAdressesSucState(this.adressesList);
+}
+
+class LoadingAdressesState extends HomeLayoutState {
+  LoadingAdressesState();
+}
+
+class LoadingAdressesFailedState extends HomeLayoutState {
+  final String error;
+
+  LoadingAdressesFailedState(this.error);
+}
+
+class AddAdressesSucState extends HomeLayoutState {
+  AddAdressesSucState();
+}
+
+class AddAdressLoadingState extends HomeLayoutState {
+  AddAdressLoadingState();
+}
+
+class AddAdressFailedState extends HomeLayoutState {
+  final String error;
+
+  AddAdressFailedState(this.error);
 }

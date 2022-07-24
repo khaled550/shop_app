@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:octo_image/octo_image.dart';
 import 'package:shop_app/constants/colors.dart';
-import 'package:shop_app/data/model/product_model.dart';
 import 'package:shop_app/ui/widgets.dart';
 
 import '../../cubit/home_cubit/home_page_cubit.dart';
@@ -15,18 +14,17 @@ class CartPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Product product = Product(
+    /* Product product = Product(
       image:
           'https://student.valuxapps.com/storage/uploads/products/1615450256e0bZk.item_XXL_7582156_7501823.jpeg',
       name: 'Product name',
       price: '\$100',
       description: 'Product description',
-    );
+    ); */
     List<CartItem> cartItems = [];
     double subtotalCart = 0;
     return Scaffold(
-      appBar: myAppBar(tite: 'My Cart'),
-      //body: _buildCartPage(context, product),
+      appBar: myAppBar(tite: getAppStrings(context).cart_page_title),
       body: BlocBuilder<HomePageCubit, HomeLayoutState>(builder: (ctx, state) {
         if (state is UpdateCartDataLoadingState) {
           return const Center(

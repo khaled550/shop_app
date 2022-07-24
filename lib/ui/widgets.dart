@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:octo_image/octo_image.dart';
+import 'package:shop_app/data/model/order_model.dart';
 import '../cubit/home_cubit/home_page_cubit.dart';
 import '../data/model/category_model.dart';
 import '../data/model/product_model.dart';
@@ -106,6 +108,7 @@ Widget defaultTextField({
         }
         return null;
       },
+      inputFormatters: [FilteringTextInputFormatter.deny(RegExp(r'\s'))],
       onTap: onTap,
       style: isDark ? const TextStyle(color: Colors.white) : const TextStyle(color: Colors.black),
       decoration: InputDecoration(
@@ -142,7 +145,7 @@ Widget bigText(
             fontWeight: FontWeight.bold));
 
 Widget smallText(
-        {Color? color,
+        {Color? color = Colors.black,
         required text,
         double size = 16,
         double height = 1.2,
@@ -257,7 +260,7 @@ Widget customIcon(BuildContext context, IconData icon) => Container(
       ),
     );
 
-buildBottomSheet(
+buildAuthBottomSheet(
     {required BuildContext context,
     required String title,
     TextEditingController? nameController,
@@ -276,116 +279,113 @@ buildBottomSheet(
       context: context,
       isDismissible: false,
       isScrollControlled: true,
-      builder: (context) => FractionallySizedBox(
-            heightFactor: 0.85,
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Form(
-                //key: formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  // mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        bigText(
-                            context: context,
-                            //color: AppColors.mainBlackColor,
-                            size: 16,
-                            text: title),
-                        IconButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            icon: const Icon(Icons.close)),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    defaultTextField(
-                        context: context,
-                        text: getAppStrings(context).enter_email,
-                        controller: emailController,
-                        validateText: 'Email must not be empty',
-                        onSubmitted: (value) {},
-                        prefixIcon: Icons.email_outlined),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    defaultTextField(
-                        context: context,
-                        text: getAppStrings(context).enter_password,
-                        keyboardType: TextInputType.visiblePassword,
-                        controller: passwordController,
-                        isPassword: true,
-                        onSubmitted: (value) {
-                          onPressedBtn;
-                        },
-                        validateText: 'Date must not be empty',
-                        onTap: () {},
-                        prefixIcon: Icons.lock_outline),
-                    isLogin
-                        ? clickableText(() {}, getAppStrings(context).forgot_password)
-                        : Column(
-                            children: [
-                              if (confirmPasswordController != null)
-                                defaultTextField(
-                                    context: context,
-                                    text: getAppStrings(context).confirm_password,
-                                    keyboardType: TextInputType.visiblePassword,
-                                    controller: confirmPasswordController,
-                                    onSubmitted: (value) {
-                                      //submitLogin();
-                                    },
-                                    validateText: '',
-                                    onTap: () {},
-                                    prefixIcon: Icons.lock_outline),
-                              const SizedBox(
-                                height: 10,
-                              ),
+      builder: (context) => Padding(
+            padding: const EdgeInsets.all(20.0) + MediaQuery.of(context).viewInsets,
+            child: Form(
+              //key: formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      bigText(
+                          context: context,
+                          //color: AppColors.mainBlackColor,
+                          size: 16,
+                          text: title),
+                      IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: const Icon(Icons.close)),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  defaultTextField(
+                      context: context,
+                      text: getAppStrings(context).enter_email,
+                      controller: emailController,
+                      validateText: 'Email must not be empty',
+                      onSubmitted: (value) {},
+                      prefixIcon: Icons.email_outlined),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  defaultTextField(
+                      context: context,
+                      text: getAppStrings(context).enter_password,
+                      keyboardType: TextInputType.visiblePassword,
+                      controller: passwordController,
+                      isPassword: true,
+                      onSubmitted: (value) {
+                        onPressedBtn;
+                      },
+                      validateText: 'Date must not be empty',
+                      onTap: () {},
+                      prefixIcon: Icons.lock_outline),
+                  isLogin
+                      ? clickableText(() {}, getAppStrings(context).forgot_password)
+                      : Column(
+                          children: [
+                            if (confirmPasswordController != null)
                               defaultTextField(
                                   context: context,
-                                  text: getAppStrings(context).enter_name,
-                                  keyboardType: TextInputType.name,
-                                  controller: nameController ?? TextEditingController(),
+                                  text: getAppStrings(context).confirm_password,
+                                  keyboardType: TextInputType.visiblePassword,
+                                  controller: confirmPasswordController,
                                   onSubmitted: (value) {
                                     //submitLogin();
                                   },
                                   validateText: '',
                                   onTap: () {},
-                                  prefixIcon: Icons.person_outline),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              defaultTextField(
-                                  context: context,
-                                  text: getAppStrings(context).enter_phone,
-                                  keyboardType: TextInputType.phone,
-                                  controller: phoneController ?? TextEditingController(),
-                                  onSubmitted: (value) {
-                                    //submitLogin();
-                                  },
-                                  validateText: '',
-                                  onTap: () {},
-                                  prefixIcon: Icons.phone_android_outlined),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                            ],
-                          ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    defaultBtn(
-                        context: context,
-                        text: btnText,
-                        //backgroungColor: AppColors.mainColor,
-                        //textColor: Colors.white,
-                        onPressed: onPressedBtn)
-                  ],
-                ),
+                                  prefixIcon: Icons.lock_outline),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            defaultTextField(
+                                context: context,
+                                text: getAppStrings(context).enter_name,
+                                keyboardType: TextInputType.name,
+                                controller: nameController ?? TextEditingController(),
+                                onSubmitted: (value) {
+                                  //submitLogin();
+                                },
+                                validateText: '',
+                                onTap: () {},
+                                prefixIcon: Icons.person_outline),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            defaultTextField(
+                                context: context,
+                                text: getAppStrings(context).enter_phone,
+                                keyboardType: TextInputType.phone,
+                                controller: phoneController ?? TextEditingController(),
+                                onSubmitted: (value) {
+                                  //submitLogin();
+                                },
+                                validateText: '',
+                                onTap: () {},
+                                prefixIcon: Icons.phone_android_outlined),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                          ],
+                        ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  defaultBtn(
+                      context: context,
+                      text: btnText,
+                      //backgroungColor: AppColors.mainColor,
+                      //textColor: Colors.white,
+                      onPressed: onPressedBtn)
+                ],
               ),
             ),
           ));
@@ -493,28 +493,32 @@ Widget buildProductItem(BuildContext context, Product product, Map<int, bool> fa
               child: Stack(
                 alignment: AlignmentDirectional.bottomStart,
                 children: [
-                  CachedNetworkImage(
-                    imageUrl: product.image!,
-                    imageBuilder: (context, imageProvider) => DecoratedBox(
-                      decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-                      ),
-                      child: SizedBox(
-                        height: 180,
-                        child: OctoImage(
-                          fit: BoxFit.cover,
-                          image: imageProvider,
-                          progressIndicatorBuilder: (context, progress) {
-                            double value = 0;
-                            if (progress != null && progress.expectedTotalBytes != null) {
-                              value = progress.cumulativeBytesLoaded / progress.expectedTotalBytes!;
-                            }
-                            return CircularProgressIndicator(value: value);
-                          },
-                          errorBuilder: (context, error, stack) => Icon(
-                            Icons.error,
-                            color: Theme.of(context).textTheme.bodyText1!.color,
+                  SizedBox(
+                    height: 180,
+                    child: CachedNetworkImage(
+                      imageUrl: product.image!,
+                      imageBuilder: (context, imageProvider) => DecoratedBox(
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+                        ),
+                        child: SizedBox(
+                          height: 180,
+                          child: OctoImage(
+                            fit: BoxFit.cover,
+                            image: imageProvider,
+                            progressIndicatorBuilder: (context, progress) {
+                              double value = 0;
+                              if (progress != null && progress.expectedTotalBytes != null) {
+                                value =
+                                    progress.cumulativeBytesLoaded / progress.expectedTotalBytes!;
+                              }
+                              return CircularProgressIndicator(value: value);
+                            },
+                            errorBuilder: (context, error, stack) => Icon(
+                              Icons.error,
+                              color: Theme.of(context).textTheme.bodyText1!.color,
+                            ),
                           ),
                         ),
                       ),
@@ -591,7 +595,7 @@ Widget buildProductItem(BuildContext context, Product product, Map<int, bool> fa
       ),
     );
 
-buildOrderItem(BuildContext context, Product product) => LimitedBox(
+buildOrderItem(BuildContext context, Order order) => LimitedBox(
       maxHeight: 150,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -603,7 +607,7 @@ buildOrderItem(BuildContext context, Product product) => LimitedBox(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  bigText(context: context, text: 'Order status', size: 16),
+                  bigText(context: context, text: order.status, size: 16),
                   const SizedBox(
                     height: 5,
                   ),
@@ -612,26 +616,59 @@ buildOrderItem(BuildContext context, Product product) => LimitedBox(
                     height: 5,
                   ),
                   smallText(
-                      text: 'total price', color: isDark ? Colors.white : AppColors.mainBlackColor),
+                      text: getAppStrings(context).total,
+                      color: isDark ? Colors.white : AppColors.mainBlackColor),
                   const SizedBox(
                     height: 5,
                   ),
                   smallText(
-                      text: '\$65',
+                      text: '\$${order.total}',
                       color: isDark ? Colors.white : AppColors.mainBlackColor,
                       fontWeight: FontWeight.bold),
                 ],
               ),
             ),
-            Positioned(
-                right: 5,
-                child: IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.navigate_next,
-                      size: 25,
-                    ))),
+            /* Positioned(
+              right: 5,
+              child: IconButton(
+                onPressed: () {},
+                icon: const Icon(
+                  Icons.navigate_next,
+                  size: 25,
+                ),
+              ),
+            ), */
           ],
         ),
       ),
     );
+
+showAlertDialog(BuildContext context, void Function() onLogoutBtn) {
+  // set up the buttons
+  Widget cancelButton = TextButton(
+    child: Text(getAppStrings(context).cancel),
+    onPressed: () {
+      Navigator.pop(context);
+    },
+  );
+  Widget continueButton = TextButton(
+    child: smallText(text: getAppStrings(context).logout, size: 14, color: Colors.red),
+    onPressed: onLogoutBtn,
+  );
+
+  AlertDialog alert = AlertDialog(
+    title: Text(getAppStrings(context).logout),
+    content: smallText(text: getAppStrings(context).logout_msg, size: 14),
+    actions: [
+      cancelButton,
+      continueButton,
+    ],
+  );
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
+}

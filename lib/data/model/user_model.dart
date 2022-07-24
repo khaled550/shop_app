@@ -5,7 +5,7 @@ class UserModel {
   String? phone;
   String? image;
   int? points;
-  int? credit;
+  double? credit;
   String? token;
 
   UserModel(

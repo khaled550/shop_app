@@ -23,9 +23,18 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "account_settings": MessageLookupByLibrary.simpleMessage("الحساب"),
+        "add": MessageLookupByLibrary.simpleMessage("اضافة"),
+        "add_address_title":
+            MessageLookupByLibrary.simpleMessage("اضافة عنوان"),
         "add_to_cart": MessageLookupByLibrary.simpleMessage("اضف الى العربة"),
+        "address_city": MessageLookupByLibrary.simpleMessage("المدينة"),
+        "address_details":
+            MessageLookupByLibrary.simpleMessage("تفاصيل العنوان"),
+        "address_notes": MessageLookupByLibrary.simpleMessage("ملاحظات"),
         "app_title": MessageLookupByLibrary.simpleMessage("متجري"),
         "best_selling": MessageLookupByLibrary.simpleMessage("الافضل مبيعا"),
+        "cancel": MessageLookupByLibrary.simpleMessage("الغاء"),
+        "cart_page_title": MessageLookupByLibrary.simpleMessage("عربة التسوق"),
         "checkout": MessageLookupByLibrary.simpleMessage("الدفع"),
         "confirm_password":
             MessageLookupByLibrary.simpleMessage("تأكيد كلمة السر"),
@@ -59,10 +68,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "login_via_google":
             MessageLookupByLibrary.simpleMessage("دخول باستخدام حساب جوجل"),
         "logout": MessageLookupByLibrary.simpleMessage("تسجيل الخروج"),
+        "logout_msg":
+            MessageLookupByLibrary.simpleMessage("هل تود تسجيل الخروج ؟"),
         "my_lang": MessageLookupByLibrary.simpleMessage("اللغة"),
         "no_account": MessageLookupByLibrary.simpleMessage("ليس لديك حساب؟"),
-        "no_cart_items":
-            MessageLookupByLibrary.simpleMessage("لا يوجد منتجات في العربة"),
+        "no_cart_items": MessageLookupByLibrary.simpleMessage(
+            "لا يوجد منتجات في عربة التسوق"),
         "price_cur": MessageLookupByLibrary.simpleMessage("ج.م"),
         "search_text_field": MessageLookupByLibrary.simpleMessage("البحث"),
         "settings": MessageLookupByLibrary.simpleMessage("الاعدادت"),
@@ -78,6 +89,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "subtotal": MessageLookupByLibrary.simpleMessage("المجموع الفرعي"),
         "total": MessageLookupByLibrary.simpleMessage("المجموع الكلي"),
         "updated": MessageLookupByLibrary.simpleMessage("تم التعديل بنجاح"),
+        "user_addresses_title":
+            MessageLookupByLibrary.simpleMessage("العناوين"),
         "view_all": MessageLookupByLibrary.simpleMessage("اظهار الكل")
       };
 }

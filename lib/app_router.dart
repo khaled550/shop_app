@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/ui/page/cart_page.dart';
 import 'package:shop_app/ui/page/home_layout/search_page.dart';
+import 'package:shop_app/ui/page/home_layout/settings/add_address.dart';
+import 'package:shop_app/ui/page/user_address.dart';
 import 'cubit/home_cubit/home_page_cubit.dart';
 import 'data/model/product_model.dart';
 import 'data/repos/home_repo.dart';
@@ -51,6 +53,7 @@ class AppRouter {
         return MaterialPageRoute(
             builder: (context) => BlocProvider.value(
                   value: homePageCubit..loadHomePageData(context),
+                  //..getOrders(context),
                   child: const HomeLayout(),
                 ));
       case PRODUCT_PAGE_PATH:
@@ -74,6 +77,18 @@ class AppRouter {
             builder: (context) => BlocProvider.value(
                   value: homePageCubit..getCartItems(context: context),
                   child: const CartPage(),
+                ));
+      case ADDRESS_PAGE_PATH:
+        return MaterialPageRoute(
+            builder: (context) => BlocProvider.value(
+                  value: homePageCubit..getAddresses(context: context),
+                  child: const UserAddressesPage(),
+                ));
+      case ADD_ADDRESS_PAGE_PATH:
+        return MaterialPageRoute(
+            builder: (context) => BlocProvider.value(
+                  value: homePageCubit,
+                  child: AddAddressPage(),
                 ));
     }
     return null;
